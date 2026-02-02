@@ -1,0 +1,150 @@
+﻿using System;
+using System.Linq;
+using UnityEditor;
+using UnityEngine;
+
+[CustomEditor(typeof(BaseSkillSO))]
+public sealed class BaseSkillSOEditor : Editor
+{
+    // --- Property path constants ---
+    private static readonly string SkillPropName = nameof(BaseSkillSO.Skill);
+    private static readonly string SkillEffectsPropName = nameof(SkillBase.Effects);
+
+    private Type[] cachedEffectTypes;
+    private Type[] cachedSkillTypes;
+
+    private bool effectsFoldout = true;
+
+    private void OnEnable()
+    {
+        // Cache all concrete SkillEffectBase types
+        cachedEffectTypes = TypeCache.GetTypesDerivedFrom<SkillEffectBase>()
+            .Where(t => !t.IsAbstract && t.IsClass && !t.IsGenericType)
+            .ToArray();
+
+        // Cache all concrete SkillBase types
+        cachedSkillTypes = TypeCache.GetTypesDerivedFrom<SkillBase>()
+            .Where(t => !t.IsAbstract && t.IsClass && !t.IsGenericType)
+            .ToArray();
+    }
+
+    public override void OnInspectorGUI()
+    {
+        serializedObject.Update();
+
+        BaseSkillSO so = (BaseSkillSO)target;
+        SerializedProperty skillProp = serializedObject.FindProperty(SkillPropName);
+
+        // Draw SkillBase fields inline
+        if (so.Skill != null)
+        {
+            if (skillProp != null)
+            {
+                EditorGUILayout.PropertyField(skillProp, true); // draw all subclass fields
+            }
+
+            GUILayout.Space(8);
+
+            // Add SkillEffect button
+            if (GUILayout.Button("Add Skill Effect"))
+                ShowAddEffectMenu();
+        }
+        else
+        {
+            EditorGUILayout.HelpBox("No Skill assigned. Click 'Set SkillType' to create one.", MessageType.Info);
+        }
+
+        GUILayout.Space(8);
+
+        // Set SkillBase type button
+        if (GUILayout.Button("Set SkillType"))
+            ShowSetSkillBaseMenu();
+
+        serializedObject.ApplyModifiedProperties();
+    }
+
+    // --- Skill Effect menu ---
+    private void ShowAddEffectMenu()
+    {
+        GenericMenu menu = new GenericMenu();
+
+        foreach (Type type in cachedEffectTypes)
+        {
+            Type capturedType = type;
+            menu.AddItem(new GUIContent(capturedType.Name), false, () => AddEffect(capturedType));
+        }
+
+        menu.ShowAsContext();
+    }
+
+    private void AddEffect(Type type)
+    {
+        BaseSkillSO so = (BaseSkillSO)target;
+        if (so.Skill == null)
+        {
+            Debug.LogWarning("Cannot add SkillEffect: SkillBase is null.");
+            return;
+        }
+
+        Undo.RecordObject(so, "Add SkillEffect");
+        serializedObject.Update();
+
+        SerializedProperty skillProp = serializedObject.FindProperty(SkillPropName);
+        SerializedProperty effectsProp = skillProp.FindPropertyRelative(SkillEffectsPropName);
+
+        if (effectsProp == null)
+        {
+            Debug.LogError("SkillEffects property is null. Make sure SkillBase has [SerializeReference] SkillEffects array or list.");
+            return;
+        }
+
+        int index = effectsProp.arraySize;
+        effectsProp.InsertArrayElementAtIndex(index);
+
+        SerializedProperty element = effectsProp.GetArrayElementAtIndex(index);
+        element.managedReferenceValue = Activator.CreateInstance(type);
+
+        serializedObject.ApplyModifiedProperties();
+        EditorUtility.SetDirty(so);
+        Repaint();
+    }
+
+    // --- SkillBase menu ---
+    private void ShowSetSkillBaseMenu()
+    {
+        GenericMenu menu = new GenericMenu();
+
+        foreach (Type type in cachedSkillTypes)
+        {
+            Type capturedType = type;
+            menu.AddItem(new GUIContent(capturedType.Name), false, () => SetSkillBase(capturedType));
+        }
+
+        menu.ShowAsContext();
+    }
+
+    private void SetSkillBase(Type type)
+    {
+        BaseSkillSO so = (BaseSkillSO)target;
+
+        Undo.RecordObject(so, "Set SkillType");
+
+        // Direct assignment works safely for [SerializeReference]
+        so.Skill = CreateSkill(type);
+
+        EditorUtility.SetDirty(so);
+
+        serializedObject.Update();
+        Repaint();
+    }
+
+    private SkillBase CreateSkill(Type type)
+    {
+        SkillBase skill = (SkillBase)Activator.CreateInstance(type);
+
+        if (skill.Effects == null)
+            skill.Effects = new SkillEffectBase[0];
+
+        return skill;
+    }
+}

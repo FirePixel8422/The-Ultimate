@@ -180,7 +180,7 @@ namespace FirePixel.Networking
         [ServerRpc(InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
         private void SendUsernameAndGUID_ServerRPC(int fromPlayerGameId, string username, string guid)
         {
-            playerIdDataArray.SilentValue.SetUserNameAndGUID(fromPlayerGameId, username, guid);
+            playerIdDataArray.Value.SetUserNameAndGUID(fromPlayerGameId, username, guid);
         }
 
         #endregion

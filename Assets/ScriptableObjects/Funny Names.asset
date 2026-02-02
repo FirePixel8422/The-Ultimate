@@ -12,3 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4815c66e18525204c8795f45a1909bf7, type: 3}
   m_Name: Funny Names
   m_EditorClassIdentifier: Assembly-CSharp::RandomPlayerNamesSO
+  funnyNames:
+  - JohnDoe
+  - WillowWilson
+  - BijnaMichael
+  - Yi-Long-Ma
+  - Loading4Ever
+  - DickSniffer
+  - CraniumSnuiver
+  - Moe-Lester
+  - HonkiePlonkie
+  - WhyIsThisHere
+  - TheFrenchLikeBaguette
+  - Craig Skinflute
+  - Admiral Aids
+  - 
