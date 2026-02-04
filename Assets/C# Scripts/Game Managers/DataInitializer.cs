@@ -9,6 +9,6 @@ public class DataInitializer : MonoBehaviour
 
     private void Awake()
     {
-        GameRules.StatusEffectRules = statusEffectsRulesSO.StatusRules;
+        GameRules.SetStatusEffectRules(statusEffectsRulesSO.StatusRules);
     }
 }

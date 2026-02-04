@@ -5,7 +5,7 @@
 [System.Serializable]
 public class SkillEffectStatus : SkillEffectBase
 {
-    public StatusEffect StatusEffect;
+    public StatusEffectInstance StatusEffect;
 
     protected override void Resolve(CombatContext ctx)
     {

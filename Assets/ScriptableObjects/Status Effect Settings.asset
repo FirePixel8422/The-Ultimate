@@ -13,18 +13,30 @@ MonoBehaviour:
   m_Name: Status Effect Settings
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffectSettingsSO
   StatusRules:
-    BleedingRules:
+    Bleeding:
       StackMode: 1
-      Damage: 2.5
-    BurningRules:
+      StrengthRules:
+        StrengthPerStack: 10
+        StackDecayMultiplier: 0.5
+    Burning:
       StackMode: 1
-      Damage: 5
-    WeakenedRules:
-      StackMode: 1
-      Multiplier: 0.75
-    EmpoweredRules:
-      StackMode: 1
-      Multiplier: 1.25
-    VulnerableRules:
-      StackMode: 1
-      Multiplier: 1.5
+      StrengthRules:
+        StrengthPerStack: 10
+        StackDecayMultiplier: 0.5
+    Broken:
+      StackMode: 2
+    Weakened:
+      StackMode: 3
+      StrengthRules:
+        StrengthPerStack: 0.25
+        StackDecayMultiplier: 0.5
+    Empowered:
+      StackMode: 2
+      StrengthRules:
+        StrengthPerStack: 0.25
+        StackDecayMultiplier: 0.5
+    Vulnerability:
+      StackMode: 3
+      StrengthRules:
+        StrengthPerStack: 0.5
+        StackDecayMultiplier: 0.5

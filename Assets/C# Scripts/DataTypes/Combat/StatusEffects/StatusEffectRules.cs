@@ -4,10 +4,10 @@
 [System.Serializable]
 public struct StatusEffectRules
 {
-    public StatusDOTRules Bleeding;
-    public StatusDOTRules Burning;
+    public StatusStackingRules Bleeding;
+    public StatusStackingRules Burning;
     public BaseStatusEffectRules Broken;
-    public StatusMultiplierRules Weakened;
-    public StatusMultiplierRules Empowered;
-    public StatusMultiplierRules Vulnerability;
+    public StatusStackingRules Weakened;
+    public StatusStackingRules Empowered;
+    public StatusStackingRules Vulnerability;
 }

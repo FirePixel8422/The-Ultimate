@@ -13,8 +13,6 @@ public sealed class BaseSkillSOEditor : Editor
     private Type[] cachedEffectTypes;
     private Type[] cachedSkillTypes;
 
-    private bool effectsFoldout = true;
-
     private void OnEnable()
     {
         // Cache all concrete SkillEffectBase types

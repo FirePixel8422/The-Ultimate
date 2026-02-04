@@ -2,7 +2,7 @@
 
 
 [System.Serializable]
-public abstract class BaseStatusEffectRules
+public class BaseStatusEffectRules
 {
     public StatusEffectStackMode StackMode;
 }
