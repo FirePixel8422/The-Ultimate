@@ -32,7 +32,7 @@ public class CombatManager : MonoBehaviour
     }
 
 
-    [ServerRpc(InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
+    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     public void AttackTargetPlayer_ServerRPC(int targetClientGameId)
     {
         StartDefensePhase_ClientRPC(GameIdRPCTargets.SendToTargetClient(targetClientGameId));

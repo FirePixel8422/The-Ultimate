@@ -135,7 +135,7 @@ PrefabInstance:
     - target: {fileID: 3088868075374821422, guid: aa2da3930e5c488489dd963262efde6f,
         type: 3}
       propertyPath: m_Name
-      value: MatchManagement
+      value: '>>Netcode Management<<'
       objectReference: {fileID: 0}
     - target: {fileID: 5287381020941622744, guid: aa2da3930e5c488489dd963262efde6f,
         type: 3}

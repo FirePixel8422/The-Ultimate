@@ -329,7 +329,7 @@ GameObject:
   - component: {fileID: 802853699}
   - component: {fileID: 802853698}
   m_Layer: 0
-  m_Name: '>>GameManager<<'
+  m_Name: '>>Data Initializer<<'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -445,7 +445,7 @@ MonoBehaviour:
     PlayerPrefab: {fileID: 0}
     Prefabs:
       NetworkPrefabsLists: []
-    TickRate: 50
+    TickRate: 60
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
     ConnectionData: 

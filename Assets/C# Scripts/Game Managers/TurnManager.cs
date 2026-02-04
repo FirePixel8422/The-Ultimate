@@ -24,14 +24,14 @@ namespace FirePixel.Networking
 #pragma warning restore UDR0001
 
 
-        [ServerRpc(InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         private void StartGame_ServerRPC()
         {
 
         }
 
 
-        [ServerRpc(InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         public void EndTurn_ServerRPC()
         {
             clientOnTurnId.IncrementSmart(GlobalGameData.MaxPlayers);
@@ -39,7 +39,7 @@ namespace FirePixel.Networking
             OnTurnSwapped_ClientRPC(clientOnTurnId);
         }
 
-        [ClientRpc(InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
+        [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         private void OnTurnSwapped_ClientRPC(int newClientTurnId)
         {
             int prevClientOnTurnId = clientOnTurnId;

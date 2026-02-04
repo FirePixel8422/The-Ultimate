@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Funny Names
   m_EditorClassIdentifier: Assembly-CSharp::RandomPlayerNamesSO
   funnyNames:
-  - JohnDoe
-  - WillowWilson
+  - John Doe
+  - Willow Wilson
   - BijnaMichael
   - Yi-Long-Ma
-  - Loading4Ever
   - DickSniffer
   - CraniumSnuiver
   - Moe-Lester
   - HonkiePlonkie
-  - WhyIsThisHere
-  - TheFrenchLikeBaguette
   - Craig Skinflute
   - Admiral Aids
+  - Diddy Dodad
+  - Tyrone Trickshot
+  - Heroine Henry

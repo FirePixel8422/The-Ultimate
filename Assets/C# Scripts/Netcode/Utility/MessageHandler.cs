@@ -85,24 +85,24 @@ namespace FirePixel.Networking
             StartCoroutine(AddTextToChatBox(LocalClientGameId, LocalUserName, message));
         }
 
-        [ServerRpc(InvokePermission = RpcInvokePermission.Everyone)]
+        [ServerRpc(RequireOwnership = false)]
         public void SendTextGlobal_ServerRPC(int clientGameId, string senderName, string text)
         {
             SendTextGlobal_ClientRPC(clientGameId, senderName, text);
         }
-        [ClientRpc(InvokePermission = RpcInvokePermission.Everyone)]
+        [ClientRpc(RequireOwnership = false)]
         private void SendTextGlobal_ClientRPC(int clientGameId, string senderName, string text)
         {
             StartCoroutine(AddTextToChatBox(clientGameId, senderName, text));
         }
 
 
-        [ServerRpc(InvokePermission = RpcInvokePermission.Everyone)]
+        [ServerRpc(RequireOwnership = false)]
         public void SendTextToClient_ServerRPC(int clientGameId, string senderName, string text)
         {
             SendTextToClient_ClientRPC(clientGameId, senderName, text);
         }
-        [ClientRpc(InvokePermission = RpcInvokePermission.Everyone)]
+        [ClientRpc(RequireOwnership = false)]
         private void SendTextToClient_ClientRPC(int clientGameId, string senderName, string text)
         {
             // Send to only "toClientId"

@@ -30,6 +30,11 @@ namespace FirePixel.Networking
 
             usernamesOnServer = new string[maxPlayerCount];
             guidsOnServer = new string[maxPlayerCount];
+            for (int i = 0; i < maxPlayerCount; i++)
+            {
+                usernamesOnServer[i] = string.Empty;
+                guidsOnServer[i] = string.Empty;
+            }
 
             playerCount = 0;
         }
@@ -157,6 +162,5 @@ namespace FirePixel.Networking
                 }
             }
         }
-
     }
 }

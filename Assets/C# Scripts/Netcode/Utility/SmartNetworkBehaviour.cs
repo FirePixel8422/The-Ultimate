@@ -64,7 +64,7 @@ namespace FirePixel.Networking
 
         public override void OnDestroy()
         {
-            if (IsSpawned)
+            if (IsSpawned && NetworkManager != null && NetworkManager.NetworkTickSystem != null)
             {
                 NetworkManager.NetworkTickSystem.Tick -= OnNetworkTick;
             }

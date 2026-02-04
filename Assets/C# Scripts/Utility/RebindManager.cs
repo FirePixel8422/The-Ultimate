@@ -12,7 +12,7 @@ public class RebindManager : MonoBehaviour
     [Tooltip("Path to rebind save file)")]
     private const string RebindsFilePath = "Input/Rebinds";
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if Enable_Debug_Logging
     [SerializeField] private bool logRebindOperations = true;
 #endif
 

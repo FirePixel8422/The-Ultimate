@@ -1,3 +1,4 @@
+using Fire_Pixel.Utility;
 using System;
 using Unity.Netcode;
 using UnityEngine;
@@ -19,7 +20,7 @@ namespace FirePixel.Networking
 
         [Header("Log Debug information")]
         [SerializeField] private bool logDebugInfo = true;
-
+        [Space(8)]
         [SerializeField] private NetworkStruct<PlayerIdDataArray> playerIdDataArray = new NetworkStruct<PlayerIdDataArray>();
 
 
@@ -50,7 +51,7 @@ namespace FirePixel.Networking
             ReceivePlayerIdDataArray_ClientRPC(newValue, NetworkIdRPCTargets.SendToAllButServer());
         }
 
-        [ClientRpc(InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
+        [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         private void ReceivePlayerIdDataArray_ClientRPC(PlayerIdDataArray newValue, NetworkIdRPCTargets rpcTargets)
         {
             if (rpcTargets.IsTarget == false) return;
@@ -59,13 +60,13 @@ namespace FirePixel.Networking
         }
 
 
-        [ServerRpc(InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         private void RequestPlayerIdDataArray_ServerRPC(ulong clientNetworkId)
         {
             ReceiveSilentPlayerIdDataArray_ClientRPC(playerIdDataArray.Value, NetworkIdRPCTargets.SendToTargetClient(clientNetworkId));
         }
 
-        [ClientRpc(InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
+        [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         private void ReceiveSilentPlayerIdDataArray_ClientRPC(PlayerIdDataArray newValue, NetworkIdRPCTargets rpcTargets)
         {
             if (rpcTargets.IsTarget == false) return;
@@ -169,7 +170,7 @@ namespace FirePixel.Networking
 
         #region Send/Recieve Username and GUID and set that data in PlayerIdDataArray
 
-        [ClientRpc(InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
+        [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         private void RequestUsernameAndGUID_ClientRPC(int fromPlayerGameId, NetworkIdRPCTargets rpcTargets)
         {
             if (rpcTargets.IsTarget == false) return;
@@ -177,10 +178,13 @@ namespace FirePixel.Networking
             SendUsernameAndGUID_ServerRPC(fromPlayerGameId, LocalUserName, LocalPlayerGUID);
         }
 
-        [ServerRpc(InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         private void SendUsernameAndGUID_ServerRPC(int fromPlayerGameId, string username, string guid)
         {
             playerIdDataArray.Value.SetUserNameAndGUID(fromPlayerGameId, username, guid);
+            playerIdDataArray.SetDirty();
+
+            DebugLogger.Log(username);
         }
 
         #endregion
@@ -327,7 +331,7 @@ namespace FirePixel.Networking
 
         #region Kick Client and kill Server Code
 
-        [ServerRpc(InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         public void DisconnectClient_ServerRPC(int clientGameId)
         {
             ulong clientNetworkId = GetClientNetworkId(clientGameId);
@@ -337,13 +341,13 @@ namespace FirePixel.Networking
             NetworkManager.DisconnectClient(clientNetworkId);
         }
 
-        [ServerRpc(InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         public void DisconnectAllClients_ServerRPC()
         {
             GetKicked_ClientRPC(GameIdRPCTargets.SendToAll());
         }
 
-        [ClientRpc(InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
+        [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         private void GetKicked_ClientRPC(GameIdRPCTargets rpcTargets)
         {
             if (rpcTargets.IsTarget == false) return;
@@ -351,9 +355,8 @@ namespace FirePixel.Networking
             OnKicked?.Invoke();
 
             // Destroy the rejoin reference on the kicked client
-            bool deletionSucces = FileManager.TryDeleteFile("RejoinData.json");
-
-            DebugLogger.Log("RejoinData.json deleted: " + deletionSucces, logDebugInfo);
+            bool deletionSucces = FileManager.TryDeleteFile(LobbyMaker.REJOINDATA_PATH);
+            DebugLogger.Log($"{LobbyMaker.REJOINDATA_PATH} deleted: " + deletionSucces, logDebugInfo);
 
             SceneManager.LoadScene(mainMenuSceneName);
 
@@ -370,14 +373,12 @@ namespace FirePixel.Networking
         {
             base.OnDestroy();
 
-            if (IsServer)
+            if (IsServer && NetworkManager.IsListening)
             {
-
                 // Kick all clients, terminate lobby and shutdown network.
                 DisconnectAllClients_ServerRPC();
 
                 LobbyManager.DeleteLobbyInstant_OnServer();
-
                 NetworkManager.Shutdown();
             }
 

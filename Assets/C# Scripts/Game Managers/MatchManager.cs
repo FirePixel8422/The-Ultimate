@@ -29,12 +29,10 @@ namespace FirePixel.Networking
             if (playerReadyCount == GlobalGameData.MaxPlayers)
             {
                 OnStartMatch_OnServer?.Invoke();
-            }
-        }
+                NetworkManager.Singleton.SceneManager.OnSynchronizeComplete -= ClientLoadedNetworkScene_ServerCallback;
 
-        public override void OnDestroy()
-        {
-            NetworkManager.SceneManager.OnSynchronizeComplete -= ClientLoadedNetworkScene_ServerCallback;
+                DebugLogger.Log("Game Ready");
+            }
         }
     }
 }

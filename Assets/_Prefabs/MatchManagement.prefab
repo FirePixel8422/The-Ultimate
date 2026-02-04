@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 8116700478484987294}
   - component: {fileID: 5287381020941622744}
   - component: {fileID: 4552873996528808999}
-  - component: {fileID: 840134738611709233}
   m_Layer: 0
   m_Name: MatchManagement
   m_TagString: Untagged
@@ -47,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1249034350
+  GlobalObjectIdHash: 3198765506
   InScenePlacedSourceGlobalObjectIdHash: 3198765506
   DeferredDespawnTick: 0
   Ownership: 1
@@ -98,21 +97,3 @@ MonoBehaviour:
       playerCount: 0
       usernamesOnServer: []
       guidsOnServer: []
---- !u!114 &840134738611709233
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3088868075374821422}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b3dc4fb2a128b542903ff0017cc1ff4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  settings:
-    privateLobby: 0
-  defaultMatchSettings:
-    privateLobby: 0
-  UITransform: {fileID: 0}

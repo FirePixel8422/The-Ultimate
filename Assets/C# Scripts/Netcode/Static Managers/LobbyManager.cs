@@ -1,7 +1,12 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using Unity.Netcode;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using UnityEngine;
 
 
 namespace FirePixel.Networking
@@ -10,8 +15,11 @@ namespace FirePixel.Networking
     {
         public static Lobby CurrentLobby { get; private set; }
         public static string LobbyId => CurrentLobby.Id;
-        public static string LobbyCode => CurrentLobby.Data["joinCode"].Value;
+        public static string LobbyCode => CurrentLobby.Data[LobbyMaker.JOINCODE_STR].Value;
 
+#pragma warning disable UDR0001
+        private static Coroutine heartBeatCo;
+#pragma warning restore UDR0001
 
 
         /// <summary>
@@ -23,15 +31,13 @@ namespace FirePixel.Networking
 
             if (calledFromHost)
             {
-#pragma warning disable CS4014
-                HeartbeatLobbyTask(CurrentLobby.Id, 25000);
-#pragma warning restore CS4014
+                heartBeatCo = NetworkManager.Singleton.StartCoroutine(HeartbeatLobbyCycle(LobbyId, 25));
 
                 // Host doesnt have to save rejoin data, if host disconnects, the lobby will be deleted
                 return;
             }
 
-            await FileManager.SaveInfoAsync(new ValueWrapper<string>(LobbyId), "RejoinData.json");
+            await FileManager.SaveInfoAsync(new ValueWrapper<string>(LobbyId), LobbyMaker.REJOINDATA_PATH);
         }
 
 
@@ -48,9 +54,15 @@ namespace FirePixel.Networking
         /// </summary>
         public static void DeleteLobbyInstant_OnServer()
         {
-            //_ = UpdateLobbyDataAsync(LobbyId, "LobbyTerminated", "true");
+            if (heartBeatCo != null)
+            {
+                NetworkManager.Singleton.StopCoroutine(heartBeatCo);
+                heartBeatCo = null;
+            }
 
-            LobbyService.Instance.DeleteLobbyAsync(LobbyId);
+            _ = UpdateLobbyDataAsync(LobbyId, LobbyMaker.LOBBY_TERMINATED_STR, "true");
+
+            _ = LobbyService.Instance.DeleteLobbyAsync(LobbyId);
         }
 
         /// <summary>
@@ -83,7 +95,7 @@ namespace FirePixel.Networking
                     Data = new Dictionary<string, DataObject>
                     {
                         [key] = new DataObject(
-                            visibility: DataObject.VisibilityOptions.Member, // who can see this
+                            visibility: DataObject.VisibilityOptions.Member,
                             value: value
                         )
                     }
@@ -103,13 +115,16 @@ namespace FirePixel.Networking
         /// <summary>
         /// Send ping to server every "pingDelayTicks" so it doesnt auto delete itself.
         /// </summary>
-        private static async Task HeartbeatLobbyTask(string lobbyId, int pingDelayTicks)
+        private static IEnumerator HeartbeatLobbyCycle(string lobbyId, float pingDelaySeconds)
         {
+            WaitForSeconds delay = new WaitForSeconds(pingDelaySeconds);
+
             while (true)
             {
-                await LobbyService.Instance.SendHeartbeatPingAsync(lobbyId);
+                _ = LobbyService.Instance.SendHeartbeatPingAsync(lobbyId);
+                _ = UpdateLobbyDataAsync(lobbyId, LobbyMaker.LOBBY_LAST_HEARTBEAT_UTC, DateTime.UtcNow.Ticks.ToString());
 
-                await Task.Delay(pingDelayTicks);
+                yield return delay;
             }
         }
     }
