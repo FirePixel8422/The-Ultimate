@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Services.Lobbies;
@@ -90,20 +89,27 @@ namespace FirePixel.Networking
         {
             try
             {
-                UpdateLobbyOptions updateOptions = new UpdateLobbyOptions
+                if (CurrentLobby.Data.TryGetValue(key, out DataObject existingData))
                 {
-                    Data = new Dictionary<string, DataObject>
+                    UpdateLobbyOptions updateOptions = new UpdateLobbyOptions
                     {
-                        [key] = new DataObject(
-                            visibility: DataObject.VisibilityOptions.Member,
-                            value: value
-                        )
-                    }
-                };
+                        Data = new Dictionary<string, DataObject>
+                        {
+                            [key] = new DataObject(
+                                visibility: existingData.Visibility,
+                                value: value
+                            )
+                        }
+                    };
 
-                CurrentLobby = await LobbyService.Instance.UpdateLobbyAsync(lobbyId, updateOptions);
+                    CurrentLobby = await LobbyService.Instance.UpdateLobbyAsync(lobbyId, updateOptions);
 
-                DebugLogger.Log($"Lobby updated: {key} = {value}");
+                    DebugLogger.Log($"Lobby updated: {key} = {value}");
+                }
+                else
+                {
+                    DebugLogger.LogWarning($"Failed to update lobby data: Data '{key}' does not exist");
+                }
             }
             catch (LobbyServiceException e)
             {
@@ -121,10 +127,10 @@ namespace FirePixel.Networking
 
             while (true)
             {
-                yield return delay;
-
                 _ = LobbyService.Instance.SendHeartbeatPingAsync(lobbyId);
-                _ = UpdateLobbyDataAsync(lobbyId, LobbyMaker.LOBBY_LAST_HEARTBEAT_UTC, DateTime.UtcNow.Ticks.ToString());
+                _ = UpdateLobbyDataAsync(lobbyId, LobbyMaker.LOBBY_LAST_HEARTBEAT_STR, DateTime.UtcNow.Ticks.ToString());
+
+                yield return delay;
             }
         }
     }

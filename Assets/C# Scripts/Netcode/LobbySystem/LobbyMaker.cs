@@ -43,7 +43,7 @@ namespace FirePixel.Networking
 
         public const string JOINCODE_STR = "JoinCode";
         public const string LOBBY_TERMINATED_STR = "LobbyTerminated";
-        public const string LOBBY_LAST_HEARTBEAT_UTC = "LobbyLastHeartbeatUTC";
+        public const string LOBBY_LAST_HEARTBEAT_STR = "LobbyLastHeartbeatUTC";
 
         public const string PLAYERGUID_PATH = "PlayerGUID.fpx";
         public const string REJOINDATA_PATH = "RejoinData.fpx";
@@ -79,7 +79,7 @@ namespace FirePixel.Networking
 
                     bool lobbyAlive =
                         lobby != null &&
-                        DateTime.UtcNow.Ticks - long.Parse(lobby.Data[LOBBY_LAST_HEARTBEAT_UTC].Value) < TimeSpan.FromSeconds(30).Ticks;
+                        DateTime.UtcNow.Ticks - long.Parse(lobby.Data[LOBBY_LAST_HEARTBEAT_STR].Value) < TimeSpan.FromSeconds(30).Ticks;
 
                     if (lobbyAlive)
                     {
@@ -91,6 +91,10 @@ namespace FirePixel.Networking
                     {
                         // Destroy the rejoin reference if the lobby doesnt exist (anymore)
                         FileManager.TryDeleteFile(REJOINDATA_PATH);
+
+                        DebugLogger.Log("Lobby is null", lobby == null);
+                        DebugLogger.Log("Heartbeat: " + long.Parse(lobby.Data[LOBBY_LAST_HEARTBEAT_STR].Value));
+                        DebugLogger.Log("Global: " + DateTime.UtcNow.Ticks);
                     }
                 }
                 catch (LobbyServiceException e)
@@ -182,7 +186,7 @@ namespace FirePixel.Networking
                             value: "false")
                         },
                         {
-                            LOBBY_LAST_HEARTBEAT_UTC, new DataObject(
+                            LOBBY_LAST_HEARTBEAT_STR, new DataObject(
                             visibility: DataObject.VisibilityOptions.Public,
                             value: "0")
                         },

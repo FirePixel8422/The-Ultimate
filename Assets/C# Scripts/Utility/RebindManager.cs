@@ -10,7 +10,7 @@ public class RebindManager : MonoBehaviour
     private InputActionRebindingExtensions.RebindingOperation currentOperation;
 
     [Tooltip("Path to rebind save file)")]
-    private const string RebindsFilePath = "Input/Rebinds";
+    private const string REBINDS_PATH = "Input/Rebinds";
 
 #if Enable_Debug_Logging
     [SerializeField] private bool logRebindOperations = true;
@@ -84,7 +84,7 @@ public class RebindManager : MonoBehaviour
 
     private async Task LoadRebindsAsync()
     {
-        (bool success, ValueWrapper<string> rebindJson) = await FileManager.LoadInfoAsync<ValueWrapper<string>>(RebindsFilePath);
+        (bool success, ValueWrapper<string> rebindJson) = await FileManager.LoadInfoAsync<ValueWrapper<string>>(REBINDS_PATH);
         if (success && !string.IsNullOrEmpty(rebindJson.Value))
         {
             inputActions.LoadBindingOverridesFromJson(rebindJson.Value);
@@ -93,14 +93,14 @@ public class RebindManager : MonoBehaviour
     private async Task SaveRebindsAsync()
     {
         string json = inputActions.SaveBindingOverridesAsJson();
-        await FileManager.SaveInfoAsync(new ValueWrapper<string>(json), RebindsFilePath);
+        await FileManager.SaveInfoAsync(new ValueWrapper<string>(json), REBINDS_PATH);
     }
 
     public void ResetRebinds()
     {
         inputActions.RemoveAllBindingOverrides();
 
-        bool success = FileManager.TryDeleteFile(RebindsFilePath);
+        bool success = FileManager.TryDeleteFile(REBINDS_PATH);
 
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD

@@ -119,11 +119,6 @@ namespace FirePixel.Networking
         /// Invoked after <see cref="NetworkManager.OnClientDisconnectCallback"/>, before updating <see cref="ClientManager"/> gameId logic.
         /// </summary>
         public static Action<ClientSessionContext> OnClientDisconnectedCallback;
-
-        /// <summary>
-        /// Invoked when a client is kicked from the server, before destroying the <see cref="ClientManager"/> gameObject.
-        /// </summary>
-        public static Action OnKicked;
 #pragma warning restore UDR0001
 
         #endregion
@@ -183,8 +178,6 @@ namespace FirePixel.Networking
         {
             playerIdDataArray.Value.SetUserNameAndGUID(fromPlayerGameId, username, guid);
             playerIdDataArray.SetDirty();
-
-            DebugLogger.Log(username);
         }
 
         #endregion
@@ -305,8 +298,8 @@ namespace FirePixel.Networking
         /// </summary>
         private void OnClientDisconnected_OnClient(ulong clientNetworkId)
         {
-            // Call function only on client who disconnected
-            if (clientNetworkId != NetworkManager.LocalClientId) return;
+            // Call function only on client who disconnected or on everyone if the host disconnected
+            if (clientNetworkId != NetworkManager.LocalClientId && clientNetworkId != 0) return;
 
             Destroy(gameObject);
 
@@ -319,7 +312,19 @@ namespace FirePixel.Networking
 
             NetworkManager.OnClientDisconnectCallback -= OnClientDisconnected_OnClient;
 
-            // When kicked from the server, load this scene
+            // If The host disconnected
+            if (clientNetworkId == 0)
+            {
+                // Destroy the rejoin reference on the kicked client
+                bool deletionSucces = FileManager.TryDeleteFile(LobbyMaker.REJOINDATA_PATH);
+                DebugLogger.Log($"{LobbyMaker.REJOINDATA_PATH} deleted: " + deletionSucces, logDebugInfo);
+
+                if (MessageHandler.Instance != null)
+                {
+                    MessageHandler.Instance.SendTextLocal("You have been kicked from the server!");
+                }
+            }
+
             SceneManager.LoadScene(mainMenuSceneName);
 
             Cursor.lockState = CursorLockMode.None;
@@ -329,64 +334,14 @@ namespace FirePixel.Networking
         #endregion
 
 
-        #region Kick Client and kill Server Code
-
-        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-        public void DisconnectClient_ServerRPC(int clientGameId)
-        {
-            ulong clientNetworkId = GetClientNetworkId(clientGameId);
-
-            GetKicked_ClientRPC(GameIdRPCTargets.SendToTargetClient(clientGameId));
-
-            NetworkManager.DisconnectClient(clientNetworkId);
-        }
-
-        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-        public void DisconnectAllClients_ServerRPC()
-        {
-            GetKicked_ClientRPC(GameIdRPCTargets.SendToAll());
-        }
-
-        [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-        private void GetKicked_ClientRPC(GameIdRPCTargets rpcTargets)
-        {
-            if (rpcTargets.IsTarget == false) return;
-
-            OnKicked?.Invoke();
-
-            // Destroy the rejoin reference on the kicked client
-            bool deletionSucces = FileManager.TryDeleteFile(LobbyMaker.REJOINDATA_PATH);
-            DebugLogger.Log($"{LobbyMaker.REJOINDATA_PATH} deleted: " + deletionSucces, logDebugInfo);
-
-            SceneManager.LoadScene(mainMenuSceneName);
-
-            if (MessageHandler.Instance != null)
-            {
-                MessageHandler.Instance.SendTextLocal("You have been kicked from the server!");
-            }
-        }
-
-        #endregion
-
-
         public override void OnDestroy()
         {
             base.OnDestroy();
-
-            if (IsServer && NetworkManager.IsListening)
-            {
-                // Kick all clients, terminate lobby and shutdown network.
-                DisconnectAllClients_ServerRPC();
-
-                LobbyManager.DeleteLobbyInstant_OnServer();
-                NetworkManager.Shutdown();
-            }
 
             playerIdDataArray.OnValueChanged = null;
             OnClientConnectedCallback = null;
             OnClientDisconnectedCallback = null;
             OnInitialized = null;
-            OnKicked = null;
         }
     }
 }
