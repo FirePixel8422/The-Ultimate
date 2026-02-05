@@ -349,6 +349,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   statusEffectsRulesSO: {fileID: 11400000, guid: f8b26322ee973bb4b9a0c45c99d9edaf,
     type: 2}
+  defenseRulesSO: {fileID: 11400000, guid: 0f71256e29edc63498802b7b2f3d0f2e, type: 2}
 --- !u!4 &802853699
 Transform:
   m_ObjectHideFlags: 0

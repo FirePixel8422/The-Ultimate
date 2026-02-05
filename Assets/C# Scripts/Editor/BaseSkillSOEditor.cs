@@ -8,7 +8,7 @@ public sealed class BaseSkillSOEditor : Editor
 {
     // --- Property path constants ---
     private static readonly string SkillPropName = nameof(BaseSkillSO.Skill);
-    private static readonly string SkillEffectsPropName = nameof(SkillBase.Effects);
+    private static readonly string SkillEffectsPropName = nameof(SkillBase.effects);
 
     private Type[] cachedEffectTypes;
     private Type[] cachedSkillTypes;
@@ -16,7 +16,7 @@ public sealed class BaseSkillSOEditor : Editor
     private void OnEnable()
     {
         // Cache all concrete SkillEffectBase types
-        cachedEffectTypes = TypeCache.GetTypesDerivedFrom<SkillEffectBase>()
+        cachedEffectTypes = TypeCache.GetTypesDerivedFrom<SkillBaseEffect>()
             .Where(t => !t.IsAbstract && t.IsClass && !t.IsGenericType)
             .ToArray();
 
@@ -140,8 +140,8 @@ public sealed class BaseSkillSOEditor : Editor
     {
         SkillBase skill = (SkillBase)Activator.CreateInstance(type);
 
-        if (skill.Effects == null)
-            skill.Effects = new SkillEffectBase[0];
+        if (skill.effects == null)
+            skill.effects = new SkillBaseEffect[0];
 
         return skill;
     }

@@ -10,15 +10,54 @@ public class SkillBase
         Id = id;
     }
 
-    public SkillInfo Info = SkillInfo.Default;
-    public SkillStats Stats = SkillStats.Default;
-    public SkillCosts Costs = SkillCosts.Default;
-    public SkillGain Gain = SkillGain.Default;
+    [SerializeField] private SkillInfo info = SkillInfo.Default;
+    [SerializeField] private SkillCosts costs = SkillCosts.Default;
+    [SerializeField] private DefenseWindowParameters DefenseWindows = new DefenseWindowParameters(0.5f, 0.25f, 0.1f);
+    public SkillInfo Info => info;
+    public SkillCosts Costs => costs;
 
-    [SerializeReference] public SkillEffectBase[] Effects;
+#if UNITY_EDITOR
+    [SerializeReference] public SkillBaseEffect[] effects;
+#else
+    private SkillBaseEffect[] effects;
+#endif
 
-    public virtual void Execute()
+
+    public virtual void Resolve(CombatContext ctx, DefenseResult defenseResult)
     {
+        DefenseAbsorptionParameters defenseAbsorptionParams = GameRules.GetDefenseAbsorptionParams(defenseResult);
 
+        int effectCount = effects.Length;
+        for (int i = 0; i < effectCount; i++)
+        {
+            effects[i].Resolve(ctx, defenseAbsorptionParams);
+        }
+    }
+
+
+    [System.Serializable]
+    public struct SkillInfo
+    {
+        public string Name;
+        public string Description;
+
+        public static SkillInfo Default => new SkillInfo()
+        {
+            Name = "New Skill",
+            Description = "You shouldve entered some skill info here..."
+        };
+    }
+
+    [System.Serializable]
+    public struct SkillCosts
+    {
+        public int EnergyCost;
+        public float HealthCost;
+
+        public static SkillCosts Default => new SkillCosts()
+        {
+            EnergyCost = 0,
+            HealthCost = 0,
+        };
     }
 }

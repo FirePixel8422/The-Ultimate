@@ -14,6 +14,22 @@ public class PlayerStats
     private List<StatusEffectInstance> effectsList = new List<StatusEffectInstance>();
 
 
+    /// <summary>
+    /// Modify player health (negative input > damage, positive > healing)
+    /// </summary>
+    public void UpdateHealth(float toAdd)
+    {
+        Health += toAdd;
+    }
+    /// <summary>
+    /// Modify player energy (negative input > damage, positive > healing)
+    /// </summary>
+    public void UpdateEnergy(int toAdd)
+    {
+        Energy += toAdd;
+    }
+
+
     #region Status Effects
 
     /// <summary>
@@ -121,7 +137,7 @@ public class PlayerStats
 
 
     /// <returns>Damage multiplier based on all active statusEffects that affect damage output</returns>
-    public float GetDamageOutputMultiplier()
+    public float GetDamageDealtMultiplier()
     {
         return 1 +
             CalculateEffectStrength(StatusEffectType.Empowered, GameRules.StatusEffects.Empowered.StrengthRules) -
@@ -135,9 +151,9 @@ public class PlayerStats
     }
 
 
-    /// <returns>EffectStrength based on current stacks of that effect and <see cref="EffectStrengthStackRules"/></returns>
+    /// <returns>EffectStrength based on current stacks of that effect and <see cref="EffectStackRules"/></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private float CalculateEffectStrength(StatusEffectType effectType, EffectStrengthStackRules strengthRules)
+    private float CalculateEffectStrength(StatusEffectType effectType, EffectStackRules strengthRules)
     {
         if (!GetEffectStackCount(effectType, out int stacks))
         {

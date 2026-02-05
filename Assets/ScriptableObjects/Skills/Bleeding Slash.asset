@@ -20,26 +20,20 @@ MonoBehaviour:
     - rid: 8095730567407730876
       type: {class: SkillSimple, ns: , asm: Assembly-CSharp}
       data:
-        Info:
+        info:
           Name: Bleeding Slash
-          Description: You shouldve entered some skill info here...
-        Stats:
-          damage: 10
-          parryParamaters:
-            ParryWindow: 0.3
-            PerfectParryWindow: 0.1
-        Costs:
-          EnergyCost: 1
+          Description: Single quick slash that deals medium damage and applies 1
+            bleeding stack
+        costs:
+          EnergyCost: 0
           HealthCost: 0
-        Gain:
-          EnergyGain: 1
-          HealthGain: 0
-        Effects:
-        - rid: 8095730567407730877
-        etst12122: 0
-    - rid: 8095730567407730877
-      type: {class: SkillEffectStatus, ns: , asm: Assembly-CSharp}
+        DefenseWindows:
+          Block: 0.5
+          Parry: 0.25
+          PerfectParry: 0.1
+        effects:
+        - rid: 8095730635522179140
+    - rid: 8095730635522179140
+      type: {class: SkillDamageEffect, ns: , asm: Assembly-CSharp}
       data:
-        StatusEffect:
-          Type: 1
-          Duration: 0
+        damage: 10

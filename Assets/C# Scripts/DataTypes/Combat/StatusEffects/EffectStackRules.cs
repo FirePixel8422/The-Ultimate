@@ -2,7 +2,7 @@
 
 
 [System.Serializable]
-public struct EffectStrengthStackRules
+public struct EffectStackRules
 {
     public float StrengthPerStack;
     public float StackDecayMultiplier;

@@ -258,6 +258,8 @@ GameObject:
   - component: {fileID: 1779185554}
   - component: {fileID: 1779185555}
   - component: {fileID: 1779185556}
+  - component: {fileID: 1779185558}
+  - component: {fileID: 1779185557}
   m_Layer: 0
   m_Name: '>>MatchManager<<'
   m_TagString: Untagged
@@ -333,6 +335,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FirePixel.Networking.MatchManager
   ShowTopMostFoldoutHeaderGroup: 1
   IsNetworkSystemInitilized: 0
+--- !u!114 &1779185557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779185552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48798f57ddb781f4eb33a984ec1e577b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatManager
+  defPlayerStats:
+    Health: 100
+    Energy: 3
+--- !u!114 &1779185558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779185552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d1ce9c5e82c1944d9d8a7a578e4e32a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkillManager
+  globalSkillSOList:
+  - {fileID: 11400000, guid: 9fb629384ae4f9e46afc1dc26dc6f315, type: 2}
 --- !u!1 &2049360977
 GameObject:
   m_ObjectHideFlags: 0
