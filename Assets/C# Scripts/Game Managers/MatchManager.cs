@@ -1,4 +1,4 @@
-using System;
+using Fire_Pixel.Utility;
 using Unity.Netcode;
 
 
@@ -14,7 +14,7 @@ namespace FirePixel.Networking
 
 
 #pragma warning disable UDR0001
-        public static Action OnStartMatch_OnServer;
+        public static OneTimeAction OnStartMatch_OnServer = new OneTimeAction();
         private int playerReadyCount;
 #pragma warning restore UDR0001
 

@@ -31,9 +31,4 @@ MonoBehaviour:
           Block: 0.5
           Parry: 0.25
           PerfectParry: 0.1
-        effects:
-        - rid: 8095730635522179140
-    - rid: 8095730635522179140
-      type: {class: SkillDamageEffect, ns: , asm: Assembly-CSharp}
-      data:
-        damage: 10
+        effects: []

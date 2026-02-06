@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class SkillManager : MonoBehaviour
 {
     public static SkillManager Instance { get; private set; }
@@ -24,7 +25,6 @@ public class SkillManager : MonoBehaviour
             GlobalSkillList[i] = skill;
         }
     }
-
 
     private void Update()
     {

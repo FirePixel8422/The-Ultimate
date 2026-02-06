@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using UnityEngine;
 using System;
 
 
@@ -12,7 +13,7 @@ namespace FirePixel.Networking
         public static TurnManager Instance { get; private set; }
 
 
-        private int clientOnTurnId;
+        [SerializeField] private int clientOnTurnId;
         public static int ClientOnTurnId => Instance.clientOnTurnId;
 
         public static bool IsMyTurn => Instance.clientOnTurnId == LocalClientGameId;
@@ -24,10 +25,19 @@ namespace FirePixel.Networking
 #pragma warning restore UDR0001
 
 
-        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-        private void StartGame_ServerRPC()
+        private void Start()
         {
+            if (IsServer)
+            {
+                MatchManager.OnStartMatch_OnServer += StartGame_ServerRPC;
+            }
+        }
 
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+        public void StartGame_ServerRPC()
+        {
+            clientOnTurnId = EzRandom.Range(0, GlobalGameData.MaxPlayers);
+            OnTurnSwapped_ClientRPC(clientOnTurnId);
         }
 
 
