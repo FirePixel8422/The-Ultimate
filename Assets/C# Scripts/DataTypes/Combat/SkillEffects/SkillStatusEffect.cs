@@ -7,8 +7,8 @@
 [System.Serializable]
 public class SkillStatusEffect : SkillBaseEffect
 {
-    [Header("Status effects applied to the defender")]
-    public StatusEffectInstance ToApplyStatusEffect;
+    [Header("Status effect applied to the defender")]
+    public StatusEffectInstance ToApplyStatusEffect = new StatusEffectInstance(StatusEffectType.Burning, 1);
 
     public override void Resolve(CombatContext ctx, DefenseAbsorptionParameters absorptionParams)
     {

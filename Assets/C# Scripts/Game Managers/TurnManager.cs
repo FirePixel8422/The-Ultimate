@@ -11,6 +11,7 @@ namespace FirePixel.Networking
     public class TurnManager : SmartNetworkBehaviour
     {
         public static TurnManager Instance { get; private set; }
+        private void Awake() => Instance = this;
 
 
         [SerializeField] private int clientOnTurnId;
@@ -25,7 +26,7 @@ namespace FirePixel.Networking
 #pragma warning restore UDR0001
 
 
-        private void Start()
+        public override void OnNetworkSpawn()
         {
             if (IsServer)
             {

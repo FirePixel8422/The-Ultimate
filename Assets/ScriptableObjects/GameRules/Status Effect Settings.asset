@@ -26,7 +26,7 @@ MonoBehaviour:
     Broken:
       StackMode: 2
     Weakened:
-      StackMode: 3
+      StackMode: 2
       StrengthRules:
         StrengthPerStack: 0.25
         StackDecayMultiplier: 0.5
@@ -36,7 +36,7 @@ MonoBehaviour:
         StrengthPerStack: 0.25
         StackDecayMultiplier: 0.5
     Vulnerability:
-      StackMode: 3
+      StackMode: 2
       StrengthRules:
         StrengthPerStack: 0.5
         StackDecayMultiplier: 0.5

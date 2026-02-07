@@ -25,12 +25,4 @@ public class SkillManager : MonoBehaviour
             GlobalSkillList[i] = skill;
         }
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            //GlobalSkillList.SelectRandom().Resolve();
-        }
-    }
 }

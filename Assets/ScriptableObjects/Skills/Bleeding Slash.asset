@@ -31,4 +31,16 @@ MonoBehaviour:
           Block: 0.5
           Parry: 0.25
           PerfectParry: 0.1
-        effects: []
+        effects:
+        - rid: 8095730677368750153
+        - rid: 8095730677368750154
+    - rid: 8095730677368750153
+      type: {class: SkillDamageEffect, ns: , asm: Assembly-CSharp}
+      data:
+        damage: 25
+    - rid: 8095730677368750154
+      type: {class: SkillStatusEffect, ns: , asm: Assembly-CSharp}
+      data:
+        ToApplyStatusEffect:
+          Type: 3
+          Duration: 2

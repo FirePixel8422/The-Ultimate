@@ -1,7 +1,7 @@
 using FirePixel.Networking;
-using System;
 using Unity.Netcode;
 using UnityEngine;
+
 
 public class CombatManager : MonoBehaviour
 {
@@ -9,7 +9,7 @@ public class CombatManager : MonoBehaviour
 
     [SerializeField] private PlayerStats defPlayerStats;
 
-    private CombatContext battleCtx;
+    [SerializeField] private CombatContext combatContext;
 
 
     private void Awake()
@@ -17,9 +17,12 @@ public class CombatManager : MonoBehaviour
         Instance = this;
 
         PlayerStats[] playerStats = new PlayerStats[GlobalGameData.MaxPlayers];
-        Array.Fill(playerStats, defPlayerStats);
+        for (int i = 0; i < GlobalGameData.MaxPlayers; i++)
+        {
+            playerStats[i] = new PlayerStats(defPlayerStats);
+        }
 
-        battleCtx = new CombatContext(playerStats);
+        combatContext = new CombatContext(playerStats);
 
         TurnManager.OnTurnStarted += StartAttackingPhase;
     }
@@ -45,5 +48,14 @@ public class CombatManager : MonoBehaviour
     private void OnDestroy()
     {
         TurnManager.OnTurnStarted -= StartAttackingPhase;
+    }
+
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SkillManager.Instance.GlobalSkillList.SelectRandom().Resolve(combatContext, DefenseResult.None);
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FirePixel.Networking;
+using UnityEngine;
 
 
 /// <summary>
@@ -7,7 +8,7 @@
 [System.Serializable]
 public class CombatContext
 {
-    private readonly PlayerStats[] playerStats;
+    [SerializeField] private PlayerStats[] playerStats;
 
     public int AttackerGameId => TurnManager.ClientOnTurnId;
     public PlayerStats Attacker => playerStats[AttackerGameId];

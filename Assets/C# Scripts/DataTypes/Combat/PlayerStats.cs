@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using Unity.Collections;
 using Unity.Mathematics;
+using UnityEngine;
 
 
 [System.Serializable]
@@ -10,9 +11,14 @@ public class PlayerStats
     public float Health;
     public float Energy;
 
+    [SerializeField] private List<StatusEffectInstance> effectsList = new List<StatusEffectInstance>();
 
-    private List<StatusEffectInstance> effectsList = new List<StatusEffectInstance>();
 
+    public PlayerStats(PlayerStats stats)
+    {
+        Health = stats.Health;
+        Energy = stats.Energy;
+    }
 
     /// <summary>
     /// Modify player health (negative input > damage, positive > healing)
@@ -49,15 +55,29 @@ public class PlayerStats
                 if (TryGetEffect(statusEffect.Type, out StatusEffectInstance existingEffect, out int effectId))
                 {
                     int newDuration = math.max(existingEffect.Duration, statusEffect.Duration);
-                    effectsList.ModifyAt(effectId, effect => effect.Duration = newDuration);
+
+                    DebugLogger.Log("newDuration= " + newDuration);
+                    DebugLogger.Log("existingEffect.Duration= " + existingEffect.Duration);
+                    DebugLogger.Log("statusEffect.Duration= " + statusEffect.Duration);
+
+                    effectsList.ModifyAt(effectId, (ref StatusEffectInstance effect) => effect.Duration = newDuration);
+                }
+                else
+                {
+                    effectsList.Add(statusEffect);
                 }
                 break;
 
             case StatusEffectStackMode.CombineDuration:
                 if (TryGetEffect(statusEffect.Type, out existingEffect, out effectId))
                 {
-                    int newDuration = existingEffect.Duration += statusEffect.Duration;
-                    effectsList.ModifyAt(effectId, effect => effect.Duration = newDuration);
+                    int newDuration = existingEffect.Duration + statusEffect.Duration;
+
+                    effectsList.ModifyAt(effectId, (ref StatusEffectInstance effect) => effect.Duration = newDuration);
+                }
+                else
+                {
+                    effectsList.Add(statusEffect);
                 }
                 break;
 
@@ -90,7 +110,7 @@ public class PlayerStats
                 continue;
             }
 
-            effectsList.ModifyAt(i, effect => effect.Duration = newDuration);
+            effectsList.ModifyAt(i, (ref StatusEffectInstance effect) => effect.Duration = newDuration);
         }
 
         float fireDamage = CalculateEffectStrength(StatusEffectType.Burning, GameRules.StatusEffects.Burning.StrengthRules);

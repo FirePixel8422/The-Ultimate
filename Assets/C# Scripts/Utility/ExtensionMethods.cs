@@ -436,10 +436,11 @@ public static class ExtensionMethods
     /// <summary>
     /// Modifies a struct element in a list safely by copying, running the modifier, then writing it back.
     /// </summary>
-    public static void ModifyAt<T>(this List<T> list, int index, Action<T> modifier) where T : struct
+    public static void ModifyAt<T>(this List<T> list, int index, ActionRef<T> modifier) where T : struct
     {
         T copy = list[index];
-        modifier(copy);
+        modifier(ref copy);
         list[index] = copy;
     }
+    public delegate void ActionRef<T>(ref T value);
 }
