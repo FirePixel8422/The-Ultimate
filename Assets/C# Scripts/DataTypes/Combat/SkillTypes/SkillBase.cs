@@ -33,31 +33,30 @@ public class SkillBase
             effects[i].Resolve(ctx, defenseAbsorptionParams);
         }
     }
+}
 
+[System.Serializable]
+public struct SkillInfo
+{
+    public string Name;
+    public string Description;
 
-    [System.Serializable]
-    public struct SkillInfo
+    public static SkillInfo Default => new SkillInfo()
     {
-        public string Name;
-        public string Description;
+        Name = "New Skill",
+        Description = "You shouldve entered some skill info here..."
+    };
+}
 
-        public static SkillInfo Default => new SkillInfo()
-        {
-            Name = "New Skill",
-            Description = "You shouldve entered some skill info here..."
-        };
-    }
+[System.Serializable]
+public struct SkillCosts
+{
+    public int EnergyCost;
+    public float HealthCost;
 
-    [System.Serializable]
-    public struct SkillCosts
+    public static SkillCosts Default => new SkillCosts()
     {
-        public int EnergyCost;
-        public float HealthCost;
-
-        public static SkillCosts Default => new SkillCosts()
-        {
-            EnergyCost = 0,
-            HealthCost = 0,
-        };
-    }
+        EnergyCost = 0,
+        HealthCost = 0,
+    };
 }

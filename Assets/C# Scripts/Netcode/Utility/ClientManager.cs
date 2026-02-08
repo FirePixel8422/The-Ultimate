@@ -205,7 +205,7 @@ namespace Fire_Pixel.Networking
 
         public override void OnNetworkSpawn()
         {
-            playerIdDataArray = new NetworkStruct<PlayerIdDataArray>(new PlayerIdDataArray(GlobalGameData.MaxPlayers));
+            playerIdDataArray = new NetworkStruct<PlayerIdDataArray>(new PlayerIdDataArray(GlobalGameData.MAX_PLAYERS));
 
             if (IsServer)
             {

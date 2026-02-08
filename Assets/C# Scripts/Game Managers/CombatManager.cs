@@ -10,15 +10,15 @@ public class CombatManager : MonoBehaviour
     [SerializeField] private PlayerStats defPlayerStats;
     [SerializeField] private CombatContext combatContext;
 
-    private static SyncedAction QuitGame = new SyncedAction();
+    private SyncedAction QuitGame = new SyncedAction();
 
 
     private void Awake()
     {
         Instance = this;
 
-        PlayerStats[] playerStats = new PlayerStats[GlobalGameData.MaxPlayers];
-        for (int i = 0; i < GlobalGameData.MaxPlayers; i++)
+        PlayerStats[] playerStats = new PlayerStats[GlobalGameData.MAX_PLAYERS];
+        for (int i = 0; i < GlobalGameData.MAX_PLAYERS; i++)
         {
             playerStats[i] = new PlayerStats(defPlayerStats);
         }
@@ -28,10 +28,7 @@ public class CombatManager : MonoBehaviour
         TurnManager.TurnStarted += StartAttackingPhase;
 
         QuitGame.Create();
-        QuitGame += () =>
-        {
-            Application.Quit();
-        };
+        QuitGame += () => Application.Quit();
     }
 
 

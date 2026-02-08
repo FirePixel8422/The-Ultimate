@@ -26,7 +26,7 @@ namespace Fire_Pixel.Networking
         private void ClientLoadedNetworkScene_ServerCallback(ulong clientId)
         {
             playerReadyCount += 1;
-            if (playerReadyCount == GlobalGameData.MaxPlayers)
+            if (playerReadyCount == GlobalGameData.MAX_PLAYERS)
             {
                 StartMatch_OnServer?.Invoke();
                 NetworkManager.Singleton.SceneManager.OnSynchronizeComplete -= ClientLoadedNetworkScene_ServerCallback;
