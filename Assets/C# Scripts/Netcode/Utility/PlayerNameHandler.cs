@@ -2,7 +2,7 @@
 using UnityEngine;
 
 
-namespace FirePixel.Networking
+namespace Fire_Pixel.Networking
 {
     public class PlayerNameHandler : MonoBehaviour
     {

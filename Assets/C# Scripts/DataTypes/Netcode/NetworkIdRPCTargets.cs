@@ -3,7 +3,7 @@ using Unity.Netcode;
 
 
 
-namespace FirePixel.Networking
+namespace Fire_Pixel.Networking
 {
     /// <summary>
     /// Custom struct to handle Network RPC Targets based on <see cref="NetworkManager"/> NetworkId System.

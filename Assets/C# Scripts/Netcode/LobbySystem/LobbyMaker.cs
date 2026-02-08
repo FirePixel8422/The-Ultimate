@@ -16,7 +16,7 @@ using UnityEngine.UI;
 
 
 
-namespace FirePixel.Networking
+namespace Fire_Pixel.Networking
 {
     /// <summary>
     /// MB class responsible for creating and joining lobbies

@@ -55,11 +55,6 @@ public class PlayerStats
                 if (TryGetEffect(statusEffect.Type, out StatusEffectInstance existingEffect, out int effectId))
                 {
                     int newDuration = math.max(existingEffect.Duration, statusEffect.Duration);
-
-                    DebugLogger.Log("newDuration= " + newDuration);
-                    DebugLogger.Log("existingEffect.Duration= " + existingEffect.Duration);
-                    DebugLogger.Log("statusEffect.Duration= " + statusEffect.Duration);
-
                     effectsList.ModifyAt(effectId, (ref StatusEffectInstance effect) => effect.Duration = newDuration);
                 }
                 else
@@ -72,7 +67,6 @@ public class PlayerStats
                 if (TryGetEffect(statusEffect.Type, out existingEffect, out effectId))
                 {
                     int newDuration = existingEffect.Duration + statusEffect.Duration;
-
                     effectsList.ModifyAt(effectId, (ref StatusEffectInstance effect) => effect.Duration = newDuration);
                 }
                 else

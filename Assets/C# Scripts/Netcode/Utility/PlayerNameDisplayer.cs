@@ -3,7 +3,7 @@ using Unity.Netcode;
 using TMPro;
 
 
-namespace FirePixel.Networking
+namespace Fire_Pixel.Networking
 {
     public class PlayerNameDisplayer : NetworkBehaviour
     {

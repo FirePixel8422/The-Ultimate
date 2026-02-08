@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 
-namespace FirePixel.Networking
+namespace Fire_Pixel.Networking
 {
     public class MessageHandler : SmartNetworkBehaviour
     {

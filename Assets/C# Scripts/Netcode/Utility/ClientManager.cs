@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 
-namespace FirePixel.Networking
+namespace Fire_Pixel.Networking
 {
     public class ClientManager : NetworkBehaviour
     {
@@ -83,7 +83,7 @@ namespace FirePixel.Networking
         /// <summary>
         /// Invoked after <see cref="ClientManager.OnNetworkSpawn"/> is called.
         /// </summary>
-        private static Action OnInitialized;
+        private static event Action OnInitialized;
         private static bool initialized;
 
         /// <summary>
@@ -112,12 +112,12 @@ namespace FirePixel.Networking
         /// <summary>
         /// Invoked after NetworkManager.OnClientConnected, before updating ClientManager gameId logic.
         /// </summary>
-        public static Action<ClientSessionContext> OnClientConnectedCallback;
+        public static event Action<ClientSessionContext> OnClientConnectedCallback;
 
         /// <summary>
         /// Invoked after <see cref="NetworkManager.OnClientDisconnectCallback"/>, before updating <see cref="ClientManager"/> gameId logic.
         /// </summary>
-        public static Action<ClientSessionContext> OnClientDisconnectedCallback;
+        public static event Action<ClientSessionContext> OnClientDisconnectedCallback;
 #pragma warning restore UDR0001
 
         #endregion
@@ -360,7 +360,7 @@ namespace FirePixel.Networking
         {
             base.OnDestroy();
 
-            playerIdDataArray.OnValueChanged = null;
+            playerIdDataArray.ResetEventCallbacks();
             OnClientConnectedCallback = null;
             OnClientDisconnectedCallback = null;
             OnInitialized = null;

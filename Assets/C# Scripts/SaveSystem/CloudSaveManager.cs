@@ -6,7 +6,7 @@ using Unity.Services.CloudSave.Models;
 using UnityEngine;
 
 
-namespace FirePixel.Networking
+namespace Fire_Pixel.Networking
 {
     /// <summary>
     /// Utility class to Save/Load data from or to User unique cloud or global cloud, supporting local fallback through <see cref="FileManager"></see>

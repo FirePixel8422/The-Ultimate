@@ -8,7 +8,7 @@ namespace Fire_Pixel.Utility
     /// </summary>
     public class OneTimeAction
     {
-        private Action internalAction;
+        private event Action internalAction;
         private bool hasExecuted;
         public bool HasExecuted => hasExecuted;
 
@@ -46,7 +46,7 @@ namespace Fire_Pixel.Utility
     /// </summary>
     public class OneTimeAction<T>
     {
-        private Action<T> internalAction;
+        private event Action<T> internalAction;
         private bool hasExecuted;
         private T invokedValue;
         public bool HasExecuted => hasExecuted;

@@ -1,4 +1,4 @@
-using FirePixel.Networking;
+using Fire_Pixel.Networking;
 using Unity.Netcode;
 using UnityEngine;
 

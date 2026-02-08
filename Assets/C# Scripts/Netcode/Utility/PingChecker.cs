@@ -5,7 +5,7 @@ using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
 
-namespace FirePixel.Networking
+namespace Fire_Pixel.Networking
 {
     public class PingChecker : NetworkBehaviour
     {

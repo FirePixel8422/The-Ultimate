@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 
 
-namespace FirePixel.Networking
+namespace Fire_Pixel.Networking
 {
     /// <summary>
     /// MB manager class that tracks player on turn GameId through <see cref="ClientManager"/> GameId System. Also has callback event for OnTurnChanged and OnTurn -Started and -Ended
@@ -20,9 +20,9 @@ namespace FirePixel.Networking
         public static bool IsMyTurn => Instance.clientOnTurnId == LocalClientGameId;
 
 #pragma warning disable UDR0001
-        public static Action<int> OnTurnChanged;
-        public static Action OnTurnStarted;
-        public static Action OnTurnEnded;
+        public static event Action<int> OnTurnChanged;
+        public static event Action OnTurnStarted;
+        public static event Action OnTurnEnded;
 #pragma warning restore UDR0001
 
 

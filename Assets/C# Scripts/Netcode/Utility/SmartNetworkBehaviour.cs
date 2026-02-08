@@ -2,7 +2,7 @@
 using UnityEngine;
 
 
-namespace FirePixel.Networking
+namespace Fire_Pixel.Networking
 {
     /// <summary>
     /// Extended version of <see cref="NetworkBehaviour"/> with easy access to local client info and network systems setup callback. (Warning, MUST Call base.OnNetworkSpawn() if overriden)
