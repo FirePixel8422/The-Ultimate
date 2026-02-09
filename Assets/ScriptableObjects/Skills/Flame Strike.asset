@@ -21,12 +21,12 @@ MonoBehaviour:
       type: {class: SkillSimple, ns: , asm: Assembly-CSharp}
       data:
         info:
-          Name: Bleeding Slash
+          Name: Flame Strike
           Description: Single quick slash that deals high damage and applies 1 burning
             stack for 2 turns.
         costs:
-          EnergyCost: 0
-          HealthCost: 0
+          Type: 0
+          Amount: 0
         DefenseWindows:
           Block: 0.5
           Parry: 0.25

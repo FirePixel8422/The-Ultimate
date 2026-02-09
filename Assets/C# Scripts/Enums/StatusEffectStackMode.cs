@@ -1,7 +1,6 @@
 ﻿
 
 
-
 public enum StatusEffectStackMode : byte
 {
     Skip,

@@ -9,25 +9,80 @@ public class SkillUIBlock : MonoBehaviour
     [SerializeField] private TextMeshProUGUI title;
     [SerializeField] private TextMeshProUGUI description;
 
-    private const float DISABLED_ALPHA = 0.1f;
+    [SerializeField] private ResourceUI[] resourceCostUIs;
+    private int activeResourceCostId = -1;
+    private bool canAfford;
 
 
-    public void UpdateUI(SkillInfo skill)
+    private const float DISABLED_ALPHA = 0.05f;
+
+
+    /// <summary>
+    /// Update UISkillBlock title, description and costs UI based on new skill data.
+    /// </summary>
+    public void UpdateUI(SkillBase skill)
     {
-        title.text = skill.Name;
-        description.text = skill.Description;
+        title.text = skill.Info.Name;
+        description.text = skill.Info.Description;
+
+        if (skill.Costs.Amount <= 0)
+        {
+            // Disable potential previous selected resourceUIBlock
+            if (activeResourceCostId != -1)
+            {
+                resourceCostUIs[activeResourceCostId].Disable();
+            }
+            activeResourceCostId = -1;
+
+            canAfford = true;
+            return;
+        }
+
+        int playerResourceId = (int)skill.Costs.Type;
+        resourceCostUIs[playerResourceId].Enable(skill.Costs.Amount);
+
+        canAfford = PlayerStats.Local.Resources[playerResourceId] >= skill.Costs.Amount;
+
+        // Disable potential previous selected resourceUIBlock
+        if (activeResourceCostId != -1)
+        {
+            resourceCostUIs[activeResourceCostId].Disable();
+        }
+        activeResourceCostId = playerResourceId;
     }
 
+    /// <summary>
+    /// Update SkillUIBlock ActiveState based on <paramref name="isActive"/> and if the skill is useable according to <see cref="SkillCosts"/> and <see cref="PlayerStats.Resources"/>.
+    /// </summary>
     public void UpdateSkillActiveState(bool isActive)
     {
-        button.enabled = isActive;
+        button.enabled = canAfford && isActive;
 
-        Color col = title.color;
-        col.a = isActive ? 1 : DISABLED_ALPHA;
-        title.color = col;
+        SetAlpha(title, isActive ? 1f : DISABLED_ALPHA);
+        SetAlpha(description, isActive ? 1f : DISABLED_ALPHA);
+    }
+    private void SetAlpha(TextMeshProUGUI text, float alpha)
+    {
+        Color c = text.color;
+        c.a = alpha;
+        text.color = c;
+    }
 
-        col = description.color;
-        col.a = isActive ? 1 : DISABLED_ALPHA;
-        description.color = col;
+
+    [System.Serializable]
+    public class ResourceUI
+    {
+        public void Enable(int resourceCost)
+        {
+            text.text = resourceCost.ToString();
+            GameObject.SetActiveSmart(true);
+        }
+        public void Disable()
+        {
+            GameObject.SetActiveSmart(false);
+        }
+
+        [SerializeField] private GameObject GameObject;
+        [SerializeField] private TextMeshProUGUI text;
     }
 }

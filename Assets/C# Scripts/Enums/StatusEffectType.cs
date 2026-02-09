@@ -1,7 +1,6 @@
 ﻿
 
 
-
 public enum StatusEffectType : byte
 {
     Burning,

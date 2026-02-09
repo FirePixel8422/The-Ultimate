@@ -8,16 +8,29 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerStats
 {
-    public float Health;
-    public float Energy;
+    public static PlayerStats Local { get; set; }
+
+
+    public float[] Resources;
+    public float Health
+    {
+        get => Resources[(int)PlayerResourceType.Health];
+        set => Resources[(int)PlayerResourceType.Health] = value;
+    }
+    public float Energy
+    {
+        get => Resources[(int)PlayerResourceType.Energy];
+        set => Resources[(int)PlayerResourceType.Energy] = value;
+    }
 
     [SerializeField] private List<StatusEffectInstance> effectsList = new List<StatusEffectInstance>();
 
 
-    public PlayerStats(PlayerStats stats)
+    public PlayerStats(float health, int energy)
     {
-        Health = stats.Health;
-        Energy = stats.Energy;
+        Resources = new float[2];
+        Health = health;
+        Energy = energy;
     }
 
     /// <summary>

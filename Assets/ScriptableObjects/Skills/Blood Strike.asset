@@ -21,12 +21,12 @@ MonoBehaviour:
       type: {class: SkillSimple, ns: , asm: Assembly-CSharp}
       data:
         info:
-          Name: Bleeding Slash
+          Name: Blood Strike
           Description: Single quick slash that deals medium damage and applies 1
             bleeding stack
         costs:
-          EnergyCost: 0
-          HealthCost: 0
+          Type: 0
+          Amount: 0
         DefenseWindows:
           Block: 0.5
           Parry: 0.25

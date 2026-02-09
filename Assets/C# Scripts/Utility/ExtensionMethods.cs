@@ -443,4 +443,16 @@ public static class ExtensionMethods
         list[index] = copy;
     }
     public delegate void ActionRef<T>(ref T value);
+
+
+    /// <returns>Wheather array is valid and has at least 1 entry</returns>
+    public static bool HasData<T>(this T[] array)
+    {
+        return array != null && array.Length > 0;
+    }
+    /// <returns>Wheather array is invalid or its length is 0</returns>
+    public static bool IsNullOrEmpty<T>(this T[] array)
+    {
+        return array == null || array.Length == 0;
+    }
 }

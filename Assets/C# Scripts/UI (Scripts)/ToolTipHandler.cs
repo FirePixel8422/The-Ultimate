@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -23,12 +22,18 @@ public class TooltipHandler : UpdateMonoBehaviour
     private TextMeshProUGUI tooltipText;
 
     private int lastTooltipId = -1;
-    private TextMeshProUGUI lastTextObject;
+    private TextMeshProUGUI lasttextect;
 
 
     private void Awake()
     {
-        toolTipWords = toolTipDataSO.ToolTips;
+        toolTipWords = toolTipDataSO.Data;
+
+        if (toolTipWords.IsNullOrEmpty())
+        {
+            DebugLogger.Log("No Tooltips found in ToolTipSO");
+            Destroy(this);
+        }
 
         // Build lookup dictionaries
         int toolTipWordCount = toolTipWords.Length;
@@ -52,19 +57,13 @@ public class TooltipHandler : UpdateMonoBehaviour
         tooltipText = activeTooltip.GetComponentInChildren<TextMeshProUGUI>();
         tooltipRect.pivot = new Vector2(0.5f, 0.5f);
     }
-    private void Start()
-    {
-        UpdateColoredWords();
-    }
 
-    [ContextMenu("Update tooltip colors")]
+
     /// <summary>
     /// Fast recolor of all registered TMPs using precomputed hex colors
     /// </summary>
     public void UpdateColoredWords()
     {
-        Stopwatch sw = Stopwatch.StartNew();
-
         int tmpCount = registeredTextGuis.Length;
 
         for (int i = 0; i < tmpCount; i++)
@@ -109,8 +108,6 @@ public class TooltipHandler : UpdateMonoBehaviour
 
             tmpText.text = sb.ToString();
         }
-
-        DebugLogger.Log("UpdateColoredWords: " + sw.ElapsedMilliseconds + " ms");
     }
 
 
@@ -135,14 +132,14 @@ public class TooltipHandler : UpdateMonoBehaviour
             if (!wordToTooltipId.TryGetValue(hoveredWord, out int tooltipId))
                 continue;
 
-            if (tooltipId == lastTooltipId && tmpText == lastTextObject)
+            if (tooltipId == lastTooltipId && tmpText == lasttextect)
             {
                 activeTooltip.SetActiveSmart(true);
                 return;
             }
 
             lastTooltipId = tooltipId;
-            lastTextObject = tmpText;
+            lasttextect = tmpText;
 
             ToolTipWord tooltipData = toolTipWords[tooltipId];
 
@@ -154,7 +151,7 @@ public class TooltipHandler : UpdateMonoBehaviour
             float hoveredWordHeight = Mathf.Abs(tr.y - bl.y);
 
             tooltipText.text = tooltipData.toolTip;
-            tooltipText.enableWordWrapping = true;
+            tooltipText.textWrappingMode = TextWrappingModes.Normal;
 
             tooltipRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, tooltipData.width);
             tooltipRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, tooltipData.height);
@@ -179,7 +176,7 @@ public class TooltipHandler : UpdateMonoBehaviour
 
         activeTooltip.SetActiveSmart(false);
         lastTooltipId = -1;
-        lastTextObject = null;
+        lasttextect = null;
     }
 
     private void GetWordWorldBounds(TextMeshProUGUI tmpText, TMP_WordInfo wordInfo, out Vector3 bl, out Vector3 tr)

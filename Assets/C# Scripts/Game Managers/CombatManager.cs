@@ -7,7 +7,7 @@ public class CombatManager : MonoBehaviour
 {
     public static CombatManager Instance { get; private set; }
 
-    [SerializeField] private PlayerStats defPlayerStats;
+    [SerializeField] private DefaultPlayerStatsSO defPlayerStats;
     [SerializeField] private CombatContext combatContext;
 
     private SyncedAction QuitGame = new SyncedAction();
@@ -20,7 +20,7 @@ public class CombatManager : MonoBehaviour
         PlayerStats[] playerStats = new PlayerStats[GlobalGameData.MAX_PLAYERS];
         for (int i = 0; i < GlobalGameData.MAX_PLAYERS; i++)
         {
-            playerStats[i] = new PlayerStats(defPlayerStats);
+            playerStats[i] = defPlayerStats.GetPlayerStatsCopy();
         }
 
         combatContext = new CombatContext(playerStats);
@@ -56,6 +56,7 @@ public class CombatManager : MonoBehaviour
     }
 
 
+    [SerializeField] private WeaponSO weapon;
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -63,6 +64,10 @@ public class CombatManager : MonoBehaviour
             SkillManager.Instance.GlobalSkillList.SelectRandom().Resolve(combatContext, DefenseResult.None);
 
             QuitGame.Schedule_ServerRPC(3);
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            SkillUIHandler.UpdateSkillUI(weapon.Data);
         }
     }
 }

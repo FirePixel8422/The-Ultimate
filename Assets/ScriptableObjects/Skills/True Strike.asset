@@ -21,11 +21,11 @@ MonoBehaviour:
       type: {class: SkillSimple, ns: , asm: Assembly-CSharp}
       data:
         info:
-          Name: Bleeding Slash
+          Name: True Strike
           Description: Single slow slash that deals low damage and low true damage
         costs:
-          EnergyCost: 0
-          HealthCost: 0
+          Type: 0
+          Amount: 0
         DefenseWindows:
           Block: 0.5
           Parry: 0.25

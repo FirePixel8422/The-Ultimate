@@ -12,14 +12,14 @@ namespace Fire_Pixel.Networking
         [SerializeField] private float updateInterval = 0.5f;
         private float updateGlobalTime = 0f;
 
-        private TextMeshProUGUI pingTextObj;
+        private TextMeshProUGUI pingtext;
         private UnityTransport transport;
         private ulong serverClientId;
 
 
         public override void OnNetworkSpawn()
         {
-            pingTextObj = GetComponentInChildren<TextMeshProUGUI>();
+            pingtext = GetComponentInChildren<TextMeshProUGUI>();
             transport = NetworkManager.NetworkConfig.NetworkTransport as UnityTransport;
             serverClientId = NetworkManager.NetworkConfig.NetworkTransport.ServerClientId;
         }
@@ -35,7 +35,7 @@ namespace Fire_Pixel.Networking
 
             ulong pingMs = transport.GetCurrentRtt(serverClientId);
 
-            pingTextObj.text = pingMs + "ms";
+            pingtext.text = pingMs + "ms";
         }
     }
 }

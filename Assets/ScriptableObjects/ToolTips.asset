@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42f3e6260e0126e4fa09a4c341a6c365, type: 3}
   m_Name: ToolTips
   m_EditorClassIdentifier: Assembly-CSharp::ToolTipsSO
-  ToolTips:
+  Data:
   - word: bleeding
     wordColor: {r: 0.8113208, g: 0.12460067, b: 0.04133137, a: 1}
     toolTip: Bleeding stacks deal 10 damage every turn untill healed.

@@ -52,12 +52,12 @@ public struct SkillInfo
 [System.Serializable]
 public struct SkillCosts
 {
-    public int EnergyCost;
-    public float HealthCost;
+    public PlayerResourceType Type;
+    public int Amount;
 
     public static SkillCosts Default => new SkillCosts()
     {
-        EnergyCost = 0,
-        HealthCost = 0,
+        Type = PlayerResourceType.Energy,
+        Amount = 0,
     };
 }
