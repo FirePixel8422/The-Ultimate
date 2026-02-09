@@ -21,6 +21,7 @@ namespace Fire_Pixel.Networking
 
 #pragma warning disable UDR0001
         public static event Action<int> TurnChanged;
+        public static event Action<TurnState> TurnStateChanged;
         public static event Action TurnStarted;
         public static event Action TurnEnded;
 #pragma warning restore UDR0001
@@ -58,11 +59,13 @@ namespace Fire_Pixel.Networking
             if (IsMyTurn)
             {
                 TurnStarted?.Invoke();
+                TurnStateChanged?.Invoke(TurnState.Started);
             }
             // If its not local clients turn, check if they lost the turn and Invoke OnTurnEnded if so.
             else if (prevClientOnTurnId == LocalClientGameId)
             {
                 TurnEnded?.Invoke();
+                TurnStateChanged?.Invoke(TurnState.Ended);
             }
             // Invoke OnTurnChanged with new clientId.
             TurnChanged?.Invoke(clientOnTurnId);

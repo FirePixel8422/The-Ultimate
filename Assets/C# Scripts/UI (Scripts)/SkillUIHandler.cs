@@ -1,3 +1,4 @@
+using Fire_Pixel.Networking;
 using UnityEngine;
 
 public class SkillUIHandler : MonoBehaviour
@@ -12,6 +13,19 @@ public class SkillUIHandler : MonoBehaviour
     {
         skillUIBlocks = GetComponentsInChildren<SkillUIBlock>(true);
         toolTipHandler = GetComponent<TooltipHandler>();
+
+        TurnManager.TurnStateChanged += UpdateSkillUIActiveState;
+    }
+
+    private void UpdateSkillUIActiveState(TurnState state)
+    {
+        bool isActive = state == TurnState.Started;
+
+        int skillCount = skillUIBlocks.Length;
+        for (int i = 0; i < skillCount; i++)
+        {
+            skillUIBlocks[i].UpdateSkillActiveState(isActive);
+        }
     }
 
     public static void UpdateSkillUI(Weapon weapon)
@@ -25,24 +39,8 @@ public class SkillUIHandler : MonoBehaviour
         toolTipHandler.UpdateColoredWords();
     }
 
-    public static void UpdateSkillsActiveState(bool isActive)
+    private void OnDestroy()
     {
-        int skillCount = skillUIBlocks.Length;
-        for (int i = 0; i < skillCount; i++)
-        {
-            skillUIBlocks[i].UpdateSkillActiveState(isActive);
-        }
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.Q))
-        {
-            UpdateSkillsActiveState(true);
-        }
-        if (Input.GetKeyUp(KeyCode.E))
-        {
-            UpdateSkillsActiveState(false);
-        }
+        TurnManager.TurnStateChanged -= UpdateSkillUIActiveState;
     }
 }

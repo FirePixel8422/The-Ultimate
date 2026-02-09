@@ -13,12 +13,14 @@ namespace Fire_Pixel.Utility
     /// </summary>
     public static class UpdateScheduler
     {
-        private static Action OnUpdate;
-        private static Action OnLateUpdate;
-        private static Action OnFixedUpdate;
+        private static event Action Update;
+        private static event Action LateUpdate;
+        private static event Action FixedUpdate;
 
-        private static Action OnLateDestroy;
-        private static Action OnLateApplicationQuit;
+        private static event Action NetworkTick;
+
+        private static event Action LateDestroy;
+        private static event Action LateApplicationQuit;
 
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -38,14 +40,14 @@ namespace Fire_Pixel.Utility
         /// </summary>
         public static void RegisterUpdate(Action action)
         {
-            OnUpdate += action;
+            Update += action;
         }
         /// <summary>
         /// Unregister a registerd method for Update()
         /// </summary>
         public static void UnRegisterUpdate(Action action)
         {
-            OnUpdate -= action;
+            Update -= action;
         }
         /// <summary>
         /// Register or Unregister a method for Update() based on bool <paramref name="register"/>
@@ -72,14 +74,14 @@ namespace Fire_Pixel.Utility
         /// </summary>
         public static void RegisterNetworkTick(Action action)
         {
-            NetworkManager.Singleton.NetworkTickSystem.Tick += action;
+            NetworkTick += action;
         }
         /// <summary>
         /// Unregister a registerd method for NetworkTick()
         /// </summary>
         public static void UnRegisterNetworkTick(Action action)
         {
-            NetworkManager.Singleton.NetworkTickSystem.Tick -= action;
+            NetworkTick -= action;
         }
         /// <summary>
         /// Register or Unregister a method for NetworkTick() based on bool <paramref name="register"/>
@@ -106,14 +108,14 @@ namespace Fire_Pixel.Utility
         /// </summary>
         public static void RegisterLateUpdate(Action action)
         {
-            OnLateUpdate += action;
+            LateUpdate += action;
         }
         /// <summary>
         /// Unregister a registerd method for LateUpdate()
         /// </summary>
         public static void UnRegisterLateUpdate(Action action)
         {
-            OnLateUpdate -= action;
+            LateUpdate -= action;
         }
         /// <summary>
         /// Register or Unregister a method for LateUpdate() based on bool <paramref name="register"/>
@@ -140,14 +142,14 @@ namespace Fire_Pixel.Utility
         /// </summary>
         public static void RegisterFixedUpdate(Action action)
         {
-            OnFixedUpdate += action;
+            FixedUpdate += action;
         }
         /// <summary>
         /// Unregister a registerd method for FixedUpdate()
         /// </summary>
         public static void UnRegisterFixedUpdate(Action action)
         {
-            OnFixedUpdate -= action;
+            FixedUpdate -= action;
         }
         /// <summary>
         /// Register or Unregister a method for FixedUpdate() based on bool <paramref name="register"/>
@@ -167,13 +169,13 @@ namespace Fire_Pixel.Utility
         #endregion
 
 
-        public static void CreateLateOnDestroyCallback(Action action)
+        public static void CreateLateDestroyCallback(Action action)
         {
-            OnLateDestroy += action;
+            LateDestroy += action;
         }
-        public static void CreateLateOnApplicationQuitCallback(Action action)
+        public static void CreateLateApplicationQuitCallback(Action action)
         {
-            OnLateApplicationQuit += action;
+            LateApplicationQuit += action;
         }
 
 
@@ -185,7 +187,13 @@ namespace Fire_Pixel.Utility
             public void Init()
             {
                 gameObject.isStatic = true;
+
+                NetworkManager.Singleton.NetworkTickSystem.Tick += InvokeNetworkTick;
                 StartCoroutine(UpdateLoop());
+            }
+            private void InvokeNetworkTick()
+            {
+                NetworkTick?.Invoke();
             }
 
             private IEnumerator UpdateLoop()
@@ -196,23 +204,23 @@ namespace Fire_Pixel.Utility
                 while (true)
                 {
                     // Update
-                    OnUpdate?.Invoke();
+                    Update?.Invoke();
 
                     // FixedUpdate
                     fixedAccumulator += Time.deltaTime;
                     while (fixedAccumulator >= fixedDelta)
                     {
-                        OnFixedUpdate?.Invoke();
+                        FixedUpdate?.Invoke();
                         fixedAccumulator -= fixedDelta;
                     }
 
                     // LateUpdate
-                    OnLateUpdate?.Invoke();
+                    LateUpdate?.Invoke();
 
-                    if (OnLateDestroy != null)
+                    if (LateDestroy != null)
                     {
-                        OnLateDestroy.Invoke();
-                        OnLateDestroy = null;
+                        LateDestroy.Invoke();
+                        LateDestroy = null;
                     }
 
                     yield return null;
@@ -221,20 +229,25 @@ namespace Fire_Pixel.Utility
 
             private void OnApplicationQuit()
             {
-                OnLateUpdate += () =>
+                LateUpdate += () =>
                 {
-                    if (OnLateApplicationQuit != null)
+                    if (LateApplicationQuit != null)
                     {
-                        OnLateApplicationQuit.Invoke();
-                        OnLateApplicationQuit = null;
+                        LateApplicationQuit.Invoke();
+                        LateApplicationQuit = null;
                     }
                 };
             }
             private void OnDestroy()
             {
-                OnUpdate = null;
-                OnLateUpdate = null;
-                OnFixedUpdate = null;
+                Update = null;
+                LateUpdate = null;
+                FixedUpdate = null;
+
+                NetworkManager.Singleton.NetworkTickSystem.Tick -= InvokeNetworkTick;
+
+                LateDestroy = null;
+                LateApplicationQuit = null;
 
                 StopAllCoroutines();
             }
