@@ -56,7 +56,7 @@ public class SkillUIBlock : MonoBehaviour
     /// </summary>
     public void UpdateSkillActiveState(bool isActive)
     {
-        button.enabled = canAfford && isActive;
+        button.interactable = canAfford && isActive;
 
         SetAlpha(title, isActive ? 1f : DISABLED_ALPHA);
         SetAlpha(description, isActive ? 1f : DISABLED_ALPHA);

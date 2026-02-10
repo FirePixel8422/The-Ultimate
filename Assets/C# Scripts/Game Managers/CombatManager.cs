@@ -7,10 +7,7 @@ public class CombatManager : MonoBehaviour
 {
     public static CombatManager Instance { get; private set; }
 
-    [SerializeField] private DefaultPlayerStatsSO defPlayerStats;
-    [SerializeField] private CombatContext combatContext;
-
-    private SyncedAction QuitGame = new SyncedAction();
+    private CombatContext combatContext;
 
 
     private void Awake()
@@ -20,17 +17,17 @@ public class CombatManager : MonoBehaviour
         PlayerStats[] playerStats = new PlayerStats[GlobalGameData.MAX_PLAYERS];
         for (int i = 0; i < GlobalGameData.MAX_PLAYERS; i++)
         {
-            playerStats[i] = defPlayerStats.GetPlayerStatsCopy();
+            playerStats[i] = GameRules.DefaultPlayerStats.GetStatsCopy();
         }
 
         combatContext = new CombatContext(playerStats);
 
         TurnManager.TurnStarted += StartAttackingPhase;
-
-        QuitGame.Create();
-        QuitGame += () => Application.Quit();
     }
-
+    private void Start()
+    {
+        WeaponManager.SwapToWeapon(0);
+    }
 
     public void StartAttackingPhase()
     {
@@ -61,13 +58,11 @@ public class CombatManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            SkillManager.Instance.GlobalSkillList.SelectRandom().Resolve(combatContext, DefenseResult.None);
-
-            QuitGame.Schedule_ServerRPC(3);
+            SkillManager.GlobalSkillList.SelectRandom().Resolve(combatContext, DefenseResult.None);
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
-            SkillUIHandler.UpdateSkillUI(weapon.Data);
+            SkillUIHandler.UpdateSkillUI(weapon.GetAsSkillSet());
         }
     }
 }

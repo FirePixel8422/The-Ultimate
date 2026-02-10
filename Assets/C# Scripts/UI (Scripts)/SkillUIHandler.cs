@@ -19,17 +19,12 @@ public class SkillUIHandler : MonoBehaviour
 
         TurnManager.TurnChanged += OnGameStart;
         TurnManager.TurnStateChanged += UpdateSkillUIActiveState;
-
-        DebugLogger.LogError("DEBUG TEST");
     }
     private void OnGameStart(int clientOnTurnGameId)
     {
         TurnState turnState = clientOnTurnGameId == ClientManager.LocalClientGameId ?
             TurnState.Started :
             TurnState.Ended;
-
-        DebugLogger.LogError("GaME sTARTED");
-        DebugLogger.LogError("You first", turnState == TurnState.Started);
 
         UpdateSkillUIActiveState(turnState);
         TurnManager.TurnChanged -= OnGameStart;
@@ -47,12 +42,12 @@ public class SkillUIHandler : MonoBehaviour
         }
     }
 
-    public static void UpdateSkillUI(Weapon weapon)
+    public static void UpdateSkillUI(SkillSet skillSet)
     {
-        int skillCount = weapon.Skills.Length;
+        int skillCount = skillSet.Length;
         for (int i = 0; i < skillCount; i++)
         {
-            skillUIBlocks[i].UpdateUI(weapon.Skills[i].Skill);
+            skillUIBlocks[i].UpdateUI(skillSet[i]);
         }
         // Update tooltip systems
         toolTipHandler.UpdateColoredWords();

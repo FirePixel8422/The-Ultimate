@@ -3,11 +3,11 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(BaseSkillSO))]
+[CustomEditor(typeof(SkillBaseSO))]
 public sealed class BaseSkillSOEditor : Editor
 {
     // --- Property path constants ---
-    private static readonly string SkillPropName = nameof(BaseSkillSO.Skill);
+    private static readonly string SkillPropName = nameof(SkillBaseSO.Skill);
     private static readonly string SkillEffectsPropName = nameof(SkillBase.effects);
 
     private Type[] cachedEffectTypes;
@@ -30,7 +30,7 @@ public sealed class BaseSkillSOEditor : Editor
     {
         serializedObject.Update();
 
-        BaseSkillSO so = (BaseSkillSO)target;
+        SkillBaseSO so = (SkillBaseSO)target;
         SerializedProperty skillProp = serializedObject.FindProperty(SkillPropName);
 
         // Draw SkillBase fields inline
@@ -77,7 +77,7 @@ public sealed class BaseSkillSOEditor : Editor
 
     private void AddEffect(Type type)
     {
-        BaseSkillSO so = (BaseSkillSO)target;
+        SkillBaseSO so = (SkillBaseSO)target;
         if (so.Skill == null)
         {
             Debug.LogWarning("Cannot add SkillEffect: SkillBase is null.");
@@ -123,7 +123,7 @@ public sealed class BaseSkillSOEditor : Editor
 
     private void SetSkillBase(Type type)
     {
-        BaseSkillSO so = (BaseSkillSO)target;
+        SkillBaseSO so = (SkillBaseSO)target;
 
         Undo.RecordObject(so, "Set SkillType");
 

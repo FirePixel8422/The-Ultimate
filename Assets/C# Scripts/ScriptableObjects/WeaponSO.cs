@@ -5,5 +5,16 @@
 [CreateAssetMenu(fileName = "New Weapon", menuName = "ScriptableObjects/WeaponSO", order = -1000)]
 public class WeaponSO : ScriptableObject
 {
-    public Weapon Data;
+    [SerializeField] private SkillBaseSO[] skills = new SkillBaseSO[3];
+    public SkillSet GetAsSkillSet() => new SkillSet(skills);
+
+
+    private void OnValidate()
+    {
+        if (skills.Length != 3)
+        {
+            DebugLogger.LogWarning("Weapons MUST have 3 skills");
+            System.Array.Resize(ref skills, 3);
+        }
+    }
 }

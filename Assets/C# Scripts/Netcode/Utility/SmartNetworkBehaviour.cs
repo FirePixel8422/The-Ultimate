@@ -13,6 +13,7 @@ namespace Fire_Pixel.Networking
         /// True 
         /// </summary>
         [HideInInspector] public bool IsNetworkSystemInitilized;
+        private bool isPostSpawnReady;
 
 
         #region Usefull quick acces to data
@@ -45,16 +46,35 @@ namespace Fire_Pixel.Networking
             ClientManager.GetOnInitializedCallback(() => 
             {
                 IsNetworkSystemInitilized = true;
-                OnNetworkSystemsSetup(); 
+                OnNetworkSystemsSetup();
+
+                if (isPostSpawnReady)
+                {
+                    OnNetworkSystemsSetupPostStart();
+                }
+                isPostSpawnReady = true;
             });
 
             NetworkManager.NetworkTickSystem.Tick += OnNetworkTick;
+        }
+        private void Start()
+        {
+            if (isPostSpawnReady)
+            {
+                OnNetworkSystemsSetupPostStart();
+            }
+            isPostSpawnReady = true;
         }
 
         /// <summary>
         /// Called After all custom build NetworkSystems have been setup through <see cref="ClientManager.OnInitialized"/>
         /// </summary>
         protected virtual void OnNetworkSystemsSetup() { }
+
+        /// <summary>
+        /// Called after OnNetworkSystemsSetup() and Start().
+        /// </summary>
+        protected virtual void OnNetworkSystemsSetupPostStart() { }
 
         /// <summary>
         /// Called before every network tick (before all scheduled RPCs are executed)

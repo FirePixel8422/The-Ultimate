@@ -1,0 +1,29 @@
+﻿using UnityEngine;
+
+
+/// <summary>
+/// A datatype acting as a Weapon, holding 3 skills in an optimized and quick accesable layout.
+/// </summary>
+[System.Serializable]
+public struct SkillSet
+{
+    [SerializeReference] private SkillBase[] Skills;
+
+    public SkillSet(SkillBaseSO[] skillsSOs)
+    {
+        int skillCount = skillsSOs.Length;
+        Skills = new SkillBase[skillCount];
+
+        for (int i = 0; i < skillCount; i++)
+        {
+            Skills[i] = skillsSOs[i].Skill;
+        }
+    }
+
+    public SkillBase this[int i]
+    {
+        get => Skills[i];
+        set => Skills[i] = value;
+    }
+    public int Length => Skills.Length;
+}

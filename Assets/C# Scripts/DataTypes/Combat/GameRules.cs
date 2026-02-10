@@ -1,16 +1,20 @@
 ﻿
 
 
-
+/// <summary>
+/// Static class holding the core game setup settings and rules on how the game works.
+/// </summary>
 public static class GameRules
 {
 #pragma warning disable UDR0001
+    public static DefaultPlayerStatsSO DefaultPlayerStats { get; private set; }
     public static StatusEffectRules StatusEffects { get; private set; }
     public static DefenseRules DefenseStrengths { get; private set; }
 #pragma warning restore UDR0001
 
-    public static void SetGameRules(StatusEffectRules newStatusRules, DefenseRules newDefenseRules)
+    public static void SetGameRules(DefaultPlayerStatsSO defaultPlayerStats, StatusEffectRules newStatusRules, DefenseRules newDefenseRules)
     {
+        DefaultPlayerStats = defaultPlayerStats;
         StatusEffects = newStatusRules;
         DefenseStrengths = newDefenseRules;
     }

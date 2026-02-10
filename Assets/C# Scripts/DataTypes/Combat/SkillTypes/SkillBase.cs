@@ -12,9 +12,10 @@ public class SkillBase
 
     [SerializeField] private SkillInfo info = SkillInfo.Default;
     [SerializeField] private SkillCosts costs = SkillCosts.Default;
-    [SerializeField] private DefenseWindowParameters DefenseWindows = new DefenseWindowParameters(0.5f, 0.25f, 0.1f);
+    [SerializeField] private DefenseWindowParameters defenseWindows = new DefenseWindowParameters(0.5f, 0.25f, 0.1f);
     public SkillInfo Info => info;
     public SkillCosts Costs => costs;
+    public DefenseWindowParameters DefenseWindows => defenseWindows;
 
 #if UNITY_EDITOR
     [SerializeReference] public SkillBaseEffect[] effects;

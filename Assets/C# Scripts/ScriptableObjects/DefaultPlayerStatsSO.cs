@@ -8,5 +8,5 @@ public class DefaultPlayerStatsSO : ScriptableObject
     [SerializeField] private float health;
     [SerializeField] private int energy;
 
-    public PlayerStats GetPlayerStatsCopy() => new PlayerStats(health, energy);
+    public PlayerStats GetStatsCopy() => new PlayerStats(health, energy);
 }
