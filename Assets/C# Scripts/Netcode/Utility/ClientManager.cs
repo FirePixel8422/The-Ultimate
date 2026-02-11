@@ -41,7 +41,7 @@ namespace Fire_Pixel.Networking
         /// </summary>
         public static void SetPlayerIdDataArray_OnServer(PlayerIdDataArray newValue)
         {
-#if UNITY_EDITOR
+#if Enable_Debug_Logging
             DebugLogger.LogError("SetPlayerIdDataArray_OnServer called on non server Client, this should only be called from the server!", Instance.IsServer == false);
 #endif
             Instance.playerIdDataArray.Value = newValue;

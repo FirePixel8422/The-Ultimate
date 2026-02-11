@@ -3,11 +3,12 @@ using Unity.Netcode;
 using UnityEngine;
 
 
-public class CombatManager : MonoBehaviour
+public class CombatManager : NetworkBehaviour
 {
     public static CombatManager Instance { get; private set; }
 
-    private CombatContext combatContext;
+    [SerializeField] private CombatContext combatContext;
+    private bool canDefend;
 
 
     private void Awake()
@@ -21,48 +22,68 @@ public class CombatManager : MonoBehaviour
         }
 
         combatContext = new CombatContext(playerStats);
-
-        TurnManager.TurnStarted += StartAttackingPhase;
     }
     private void Start()
     {
         WeaponManager.SwapToWeapon(0);
     }
 
-    public void StartAttackingPhase()
-    {
-
-    }
-
 
     [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    public void AttackTargetPlayer_ServerRPC(int targetClientGameId)
+    public void Attack_ServerRPC(int skillId, int attackerClientGameId)
     {
-        StartDefensePhase_ClientRPC(GameIdRPCTargets.SendToTargetClient(targetClientGameId));
+        StartDefensePhase_ClientRPC(skillId, GameIdRPCTargets.SendToOppositeClient(attackerClientGameId));
     }
-
-    [ClientRpc(InvokePermission = RpcInvokePermission.Server, Delivery = RpcDelivery.Reliable)]
-    public void StartDefensePhase_ClientRPC(GameIdRPCTargets rpcTargets)
+    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    private void StartDefensePhase_ClientRPC(int skillId, GameIdRPCTargets rpcTargets)
     {
         if (rpcTargets.IsTarget == false) return;
+
+        DefenseManager.StartAttackSequence(skillId);
+        DefenseManager.AttackImpact += ResolveAttack;
     }
 
-    private void OnDestroy()
+
+    #region Resolve Attack on defender and attacker
+
+    private void ResolveAttack(int skillId, DefenseResult defenseResult)
     {
-        TurnManager.TurnStarted -= StartAttackingPhase;
+        DefenseManager.AttackImpact -= ResolveAttack;
+
+        ResolveAttack_ServerRPC(skillId, defenseResult);
+        ResolveAttack_Local(skillId, defenseResult);
+    }
+    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    private void ResolveAttack_ServerRPC(int skillId, DefenseResult defenseResult, ServerRpcParams rpcParams = default)
+    {
+        int attackerClientGameId = ClientManager.GetClientGameId(rpcParams.Receive.SenderClientId);
+
+        ResolveAttack_ClientRPC(skillId, defenseResult, GameIdRPCTargets.SendToOppositeClient(attackerClientGameId));
     }
 
-
-    [SerializeField] private WeaponSO weapon;
-    private void Update()
+    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    private void ResolveAttack_ClientRPC(int skillId, DefenseResult defenseResult, GameIdRPCTargets rpcTargets)
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SkillManager.GlobalSkillList.SelectRandom().Resolve(combatContext, DefenseResult.None);
-        }
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            SkillUIHandler.UpdateSkillUI(weapon.GetAsSkillSet());
-        }
+        if (rpcTargets.IsTarget == false) return;
+
+        ResolveAttack_Local(skillId, defenseResult);
+    }
+    private void ResolveAttack_Local(int skillId, DefenseResult defenseResult)
+    {
+        SkillManager.GlobalSkillList[skillId].Resolve(combatContext, defenseResult);
+
+        DebugLogger.LogError("Defender Health: " + combatContext.Defender.Health);
+        DebugLogger.LogError("Defender Effect Count: " + combatContext.Defender.EffectsList.Count);
+
+        TurnManager.Instance.EndTurn_ServerRPC();
+    }
+
+    #endregion
+
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        DefenseManager.AttackImpact -= ResolveAttack;
     }
 }

@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Fire_Pixel.Networking;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,29 +11,41 @@ public class SkillUIBlock : MonoBehaviour
     [SerializeField] private TextMeshProUGUI description;
 
     [SerializeField] private ResourceUI[] resourceCostUIs;
-    private int activeResourceCostId = -1;
+    private int currentSkillId = -1;
+    private int currentResourceCostId = -1;
     private bool canAfford;
 
 
     private const float DISABLED_ALPHA = 0.05f;
 
 
+    private void Awake()
+    {
+        button.onClick.AddListener(AttackWithTargetSkill);
+    }
+    private void AttackWithTargetSkill()
+    {
+        CombatManager.Instance.Attack_ServerRPC(currentSkillId, ClientManager.LocalClientGameId);
+    }
+
     /// <summary>
     /// Update UISkillBlock title, description and costs UI based on new skill data.
     /// </summary>
     public void UpdateUI(SkillBase skill)
     {
+        currentSkillId = skill.Id;
+
         title.text = skill.Info.Name;
         description.text = skill.Info.Description;
 
         if (skill.Costs.Amount <= 0)
         {
             // Disable potential previous selected resourceUIBlock
-            if (activeResourceCostId != -1)
+            if (currentResourceCostId != -1)
             {
-                resourceCostUIs[activeResourceCostId].Disable();
+                resourceCostUIs[currentResourceCostId].Disable();
             }
-            activeResourceCostId = -1;
+            currentResourceCostId = -1;
 
             canAfford = true;
             return;
@@ -44,11 +57,11 @@ public class SkillUIBlock : MonoBehaviour
         canAfford = PlayerStats.Local.Resources[playerResourceId] >= skill.Costs.Amount;
 
         // Disable potential previous selected resourceUIBlock
-        if (activeResourceCostId != -1)
+        if (currentResourceCostId != -1)
         {
-            resourceCostUIs[activeResourceCostId].Disable();
+            resourceCostUIs[currentResourceCostId].Disable();
         }
-        activeResourceCostId = playerResourceId;
+        currentResourceCostId = playerResourceId;
     }
 
     /// <summary>

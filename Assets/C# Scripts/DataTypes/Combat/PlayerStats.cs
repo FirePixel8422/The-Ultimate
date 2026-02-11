@@ -24,6 +24,7 @@ public class PlayerStats
     }
 
     [SerializeField] private List<StatusEffectInstance> effectsList = new List<StatusEffectInstance>();
+    public List<StatusEffectInstance> EffectsList => effectsList;
 
 
     public PlayerStats(float health, int energy)
@@ -126,8 +127,7 @@ public class PlayerStats
         float fireDamage = CalculateEffectStrength(StatusEffectType.Burning, GameRules.StatusEffects.Burning.StrengthRules);
         float bleedDamage = CalculateEffectStrength(StatusEffectType.Bleeding, GameRules.StatusEffects.Bleeding.StrengthRules);
 
-        // Player takes damage
-        // fireDamage + bleedDamage
+        UpdateHealth(-(fireDamage + bleedDamage));
     }
 
 

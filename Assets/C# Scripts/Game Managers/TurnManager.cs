@@ -1,7 +1,5 @@
 using Unity.Netcode;
-using UnityEngine;
 using System;
-using System.Data.Common;
 
 
 namespace Fire_Pixel.Networking
@@ -52,6 +50,7 @@ namespace Fire_Pixel.Networking
             clientOnTurnId.IncrementSmart(GlobalGameData.MAX_PLAYERS);
 
             OnTurnSwapped_ClientRPC(clientOnTurnId, GameIdRPCTargets.SendToOppositeClient(senderGameId));
+            OnTurnSwapped_Local(clientOnTurnId);
         }
         [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         private void OnTurnSwapped_ClientRPC(int newClientTurnId, GameIdRPCTargets rpcTargets)
