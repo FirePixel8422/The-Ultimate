@@ -218,7 +218,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press any key to rebind to...
+  m_text: Press any key to rebind to
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: af748e4b78265f244b691748205c9ad3, type: 2}
   m_sharedMaterial: {fileID: 1799957207203050485, guid: af748e4b78265f244b691748205c9ad3,
