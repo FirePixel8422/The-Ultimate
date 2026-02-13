@@ -15,7 +15,7 @@ public class RebindController : MonoBehaviour
     {
         GetComponentInChildren<Button>(true).onClick.AddListener(StartRebind);
 
-        RebindManager.RebindsReloaded += () =>
+        RebindManager.RebindsLoaded += () =>
         {
             if (ExtensionMethods.TryFindAction(actionReference.asset, actionReference.action.name, out InputAction action))
             {

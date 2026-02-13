@@ -11,9 +11,9 @@ public class WeaponSO : ScriptableObject
 
     private void OnValidate()
     {
-        if (skills.Length != 3)
+        if (skills.Length < 3)
         {
-            DebugLogger.LogWarning("Weapons MUST have 3 skills");
+            DebugLogger.LogWarning("Weapons must have AT LEAST 3 skills");
             System.Array.Resize(ref skills, 3);
         }
     }

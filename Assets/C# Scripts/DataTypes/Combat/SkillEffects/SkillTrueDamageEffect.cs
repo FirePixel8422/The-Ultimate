@@ -12,8 +12,9 @@ public class SkillTrueDamageEffect : SkillBaseEffect
 
     public override void Resolve(CombatContext ctx, DefenseAbsorptionParameters absorptionParams)
     {
-        ctx.Defender.UpdateHealth(-trueDamage *
+        ctx.Defender.Health -= 
+            trueDamage *
             ctx.Attacker.GetDamageDealtMultiplier() *
-            ctx.Defender.GetDamageReceivedMultiplier());
+            ctx.Defender.GetDamageReceivedMultiplier();
     }
 }

@@ -4,15 +4,15 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-public class CombatManager : NetworkBehaviour
+public class CombatManager : SmartNetworkBehaviour
 {
     public static CombatManager Instance { get; private set; }
 
     [SerializeField] private CombatContext combatContext;
     private bool canDefend;
 
-    [SerializeField] private InputActionReference BlockInput;
-    [SerializeField] private InputActionReference ParryInput;
+    [SerializeField] private InputActionReference blockInput;
+    [SerializeField] private InputActionReference parryInput;
 
 
     private void Awake()
@@ -25,10 +25,39 @@ public class CombatManager : NetworkBehaviour
             playerStats[i] = GameRules.DefaultPlayerStats.GetStatsCopy();
         }
         combatContext = new CombatContext(playerStats);
+
+
+        blockInput.action.performed += OnBlock;
+        parryInput.action.performed += OnParry;
+
+        RebindManager.RebindsLoaded += () =>
+        {
+            blockInput.action.Enable();
+            parryInput.action.Enable();
+        };
     }
-    private void Start()
+
+    protected override void OnNetworkSystemsSetupPostStart()
     {
+        PlayerStats.Local = combatContext.Players[LocalClientGameId];
         WeaponManager.SwapToRandomWeapon();
+    }
+
+    private void OnBlock(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed && canDefend)
+        {
+            canDefend = false;
+            AttackManager.DoDefendAction(DefenseType.Block);
+        }
+    }
+    private void OnParry(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed && canDefend)
+        {
+            canDefend = false;
+            AttackManager.DoDefendAction(DefenseType.Parry);
+        }
     }
 
 
@@ -86,5 +115,11 @@ public class CombatManager : NetworkBehaviour
     public override void OnDestroy()
     {
         base.OnDestroy();
+
+        blockInput.action.performed -= OnBlock;
+        blockInput.action.Disable();
+
+        parryInput.action.performed -= OnParry;
+        parryInput.action.Disable();
     }
 }

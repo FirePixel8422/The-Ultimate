@@ -58,16 +58,4 @@ public class HUDHandler : MonoBehaviour
         UpdateScheduler.UnRegisterUpdate(FadeInSequence);
         UpdateScheduler.UnRegisterUpdate(FadeOutSequence);
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            FadeIn();
-        }
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            FadeOut();
-        }
-    }
 }

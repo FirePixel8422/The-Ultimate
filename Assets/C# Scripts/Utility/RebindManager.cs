@@ -11,7 +11,7 @@ public class RebindManager : MonoBehaviour
     public static RebindManager Instance { get; private set; }
 
 #pragma warning disable UDR0001
-    public static OneTimeAction RebindsReloaded = new OneTimeAction();
+    public static OneTimeAction RebindsLoaded = new OneTimeAction();
 #pragma warning restore UDR0001
 
 
@@ -137,9 +137,9 @@ public class RebindManager : MonoBehaviour
         if (success && !string.IsNullOrEmpty(rebindJson.Value))
         {
             inputActions.LoadBindingOverridesFromJson(rebindJson.Value);
-            RebindsReloaded.Invoke();
             DebugLogger.Log("Rebinds loaded.", logRebindOperations);
         }
+        RebindsLoaded?.Invoke();
     }
     private async Task SaveRebindsAsync()
     {
@@ -174,6 +174,6 @@ public class RebindManager : MonoBehaviour
     private void OnDestroy()
     {
         CancelRebind();
-        RebindsReloaded = null;
+        RebindsLoaded = null;
     }
 }

@@ -2,7 +2,7 @@
 
 
 /// <summary>
-/// A datatype acting as a Weapon, holding 3 skills in an optimized and quick accesable layout.
+/// A datatype acting as a Weapon, holding X skills in an optimized and quick accesable layout.
 /// </summary>
 [System.Serializable]
 public struct SkillSet
@@ -20,6 +20,10 @@ public struct SkillSet
         }
     }
 
+    public void RandomizeSkillOrder()
+    {
+        Skills.Shuffle();
+    }
     public SkillBase this[int i]
     {
         get => Skills[i];

@@ -15,7 +15,6 @@ namespace Fire_Pixel.Networking
 
 
 
-
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();

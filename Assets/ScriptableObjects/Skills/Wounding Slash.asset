@@ -27,10 +27,11 @@ MonoBehaviour:
         costs:
           Type: 0
           Amount: 0
-        DefenseWindows:
+        defenseWindows:
           Block: 0.5
           Parry: 0.25
           PerfectParry: 0.1
+        attackStartupTime: 0
         effects:
         - rid: 8095730677368750153
         - rid: 8095730677368750154
@@ -44,10 +45,10 @@ MonoBehaviour:
       data:
         ToApplyStatusEffect:
           Type: 1
-          Duration: 1
+          Duration: 0
     - rid: 8095730704316104987
       type: {class: SkillStatusEffect, ns: , asm: Assembly-CSharp}
       data:
         ToApplyStatusEffect:
           Type: 1
-          Duration: 1
+          Duration: 0

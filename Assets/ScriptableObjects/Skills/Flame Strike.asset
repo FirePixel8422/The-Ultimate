@@ -26,11 +26,12 @@ MonoBehaviour:
             stack for 2 turns.
         costs:
           Type: 0
-          Amount: 0
-        DefenseWindows:
+          Amount: 5
+        defenseWindows:
           Block: 0.5
           Parry: 0.25
           PerfectParry: 0.1
+        attackStartupTime: 0
         effects:
         - rid: 8095730677368750153
         - rid: 8095730677368750154

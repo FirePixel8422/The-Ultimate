@@ -15,7 +15,15 @@ public class PlayerStats
     public float Health
     {
         get => Resources[(int)PlayerResourceType.Health];
-        set => Resources[(int)PlayerResourceType.Health] = value;
+        set
+        {
+            // If player healed
+            if (Resources[(int)PlayerResourceType.Health] < value)
+            {
+
+            }
+            Resources[(int)PlayerResourceType.Health] = value;
+        }
     }
     public float Energy
     {
@@ -32,21 +40,6 @@ public class PlayerStats
         Resources = new float[2];
         Health = health;
         Energy = energy;
-    }
-
-    /// <summary>
-    /// Modify player health (negative input > damage, positive > healing)
-    /// </summary>
-    public void UpdateHealth(float toAdd)
-    {
-        Health += toAdd;
-    }
-    /// <summary>
-    /// Modify player energy (negative input > damage, positive > healing)
-    /// </summary>
-    public void UpdateEnergy(int toAdd)
-    {
-        Energy += toAdd;
     }
 
 
@@ -127,7 +120,26 @@ public class PlayerStats
         float fireDamage = CalculateEffectStrength(StatusEffectType.Burning, GameRules.StatusEffects.Burning.StrengthRules);
         float bleedDamage = CalculateEffectStrength(StatusEffectType.Bleeding, GameRules.StatusEffects.Bleeding.StrengthRules);
 
-        UpdateHealth(-(fireDamage + bleedDamage));
+        Health -= (fireDamage + bleedDamage);
+    }
+
+    /// <summary>
+    /// Cleanse all stacks of every bad status effect of current effectlist
+    /// </summary>
+    public void CleanseStatusEffects()
+    {
+        int effectCount = effectsList.Count;
+        for (int i = 0; i < effectCount; i++)
+        {
+            StatusEffectType type = effectsList[i].Type;
+            
+            // Cleanse only bad status effects
+            if (type != StatusEffectType.Empowered)
+            {
+                effectsList.RemoveAtSwapBack(i);
+                i--;
+            }
+        }
     }
 
 

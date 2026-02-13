@@ -12,9 +12,10 @@ public class SkillDamageEffect : SkillBaseEffect
 
     public override void Resolve(CombatContext ctx, DefenseAbsorptionParameters absorptionParams)
     {
-        ctx.Defender.UpdateHealth(-damage *
+        ctx.Defender.Health -= 
+            damage *
             ctx.Attacker.GetDamageDealtMultiplier() *
             ctx.Defender.GetDamageReceivedMultiplier() *
-            (1 - absorptionParams.DamageAbsorptionPercent));
+            (1 - absorptionParams.DamageAbsorptionPercent);
     }
 }

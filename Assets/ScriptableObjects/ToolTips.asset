@@ -17,9 +17,14 @@ MonoBehaviour:
     wordColor: {r: 0.8113208, g: 0.12460067, b: 0.04133137, a: 1}
     toolTip: Bleeding stacks deal 10 damage every turn untill healed.
     width: 500
-    height: 150
+    height: 100
   - word: burning
     wordColor: {r: 0.8490566, g: 0.4341402, b: 0.4341402, a: 1}
-    toolTip: Burning stacks deal 10 damage every turn for a set duration of turns
+    toolTip: Burning stacks deal 10 damage every turn for a set duration of turns.
     width: 500
-    height: 150
+    height: 100
+  - word: cleanses
+    wordColor: {r: 0.81886786, g: 0.641189, b: 0.641189, a: 1}
+    toolTip: Removes all negative status effects.
+    width: 500
+    height: 100

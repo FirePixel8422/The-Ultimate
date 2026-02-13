@@ -2,7 +2,7 @@ using Fire_Pixel.Networking;
 using UnityEngine;
 
 
-public class SkillUIHandler : MonoBehaviour
+public class SkillUIManager : MonoBehaviour
 {
 #pragma warning disable UDR0001
     private static SkillUIBlock[] skillUIBlocks;
@@ -15,19 +15,24 @@ public class SkillUIHandler : MonoBehaviour
         skillUIBlocks = GetComponentsInChildren<SkillUIBlock>(true);
         toolTipHandler = GetComponent<TooltipHandler>();
 
-        UpdateSkillUIActiveState(TurnState.Ended);
-
         TurnManager.TurnChanged += OnGameStart;
         TurnManager.TurnStateChanged += UpdateSkillUIActiveState;
     }
     private void OnGameStart(int clientOnTurnGameId)
     {
+        TurnManager.TurnChanged -= OnGameStart;
+
+        int skillSlotCount = skillUIBlocks.Length;
+        for (int i = 0; i < skillSlotCount; i++)
+        {
+            skillUIBlocks[i].Init();
+        }
+
         TurnState turnState = clientOnTurnGameId == ClientManager.LocalClientGameId ?
             TurnState.Started :
             TurnState.Ended;
 
         UpdateSkillUIActiveState(turnState);
-        TurnManager.TurnChanged -= OnGameStart;
     }
 
 
@@ -35,8 +40,8 @@ public class SkillUIHandler : MonoBehaviour
     {
         bool isActive = state == TurnState.Started;
 
-        int skillCount = skillUIBlocks.Length;
-        for (int i = 0; i < skillCount; i++)
+        int skillSlotCount = skillUIBlocks.Length;
+        for (int i = 0; i < skillSlotCount; i++)
         {
             skillUIBlocks[i].UpdateSkillActiveState(isActive);
         }
@@ -44,8 +49,14 @@ public class SkillUIHandler : MonoBehaviour
 
     public static void UpdateSkillUI(SkillSet skillSet)
     {
-        int skillCount = skillSet.Length;
-        for (int i = 0; i < skillCount; i++)
+        int skillSlotCount = skillUIBlocks.Length;
+        if (skillSet.Length > skillSlotCount)
+        {
+            // Randomize order so a weapon with more skills then there are skillslots, chooses random skills to fill the slots
+            skillSet.RandomizeSkillOrder();
+        }
+
+        for (int i = 0; i < skillSlotCount; i++)
         {
             skillUIBlocks[i].UpdateUI(skillSet[i]);
         }
@@ -55,7 +66,7 @@ public class SkillUIHandler : MonoBehaviour
 
     private void OnDestroy()
     {
-        TurnManager.TurnStateChanged -= UpdateSkillUIActiveState;
         TurnManager.TurnChanged -= OnGameStart;
+        TurnManager.TurnStateChanged -= UpdateSkillUIActiveState;
     }
 }

@@ -9,6 +9,7 @@ using UnityEngine;
 public class CombatContext
 {
     [SerializeField] private PlayerStats[] playerStats;
+    public PlayerStats[] Players => playerStats;
 
     public int AttackerGameId => TurnManager.ClientOnTurnId;
     public PlayerStats Attacker => playerStats[AttackerGameId];

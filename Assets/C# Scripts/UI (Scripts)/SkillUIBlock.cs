@@ -1,5 +1,4 @@
-﻿using Fire_Pixel.Networking;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,17 +14,24 @@ public class SkillUIBlock : MonoBehaviour
     private int currentResourceCostId = -1;
     private bool canAfford;
 
-
     private const float DISABLED_ALPHA = 0.05f;
+
 
 
     private void Awake()
     {
-        button.onClick.AddListener(AttackWithTargetSkill);
+        UpdateSkillActiveState(false);
     }
-    private void AttackWithTargetSkill()
+    /// <summary>
+    /// Enable Button of the skillUIBlock and wire it to the attack system
+    /// </summary>
+    public void Init()
     {
-        CombatManager.Instance.Attack_ServerRPC(currentSkillId);
+        button.enabled = true;
+        button.onClick.AddListener(() =>
+        {
+            CombatManager.Instance.Attack_ServerRPC(currentSkillId);
+        });
     }
 
     /// <summary>
@@ -52,9 +58,9 @@ public class SkillUIBlock : MonoBehaviour
         }
 
         int playerResourceId = (int)skill.Costs.Type;
-        resourceCostUIs[playerResourceId].Enable(skill.Costs.Amount);
-
         canAfford = PlayerStats.Local.Resources[playerResourceId] >= skill.Costs.Amount;
+
+        resourceCostUIs[playerResourceId].Enable(skill.Costs.Amount, canAfford);
 
         // Disable potential previous selected resourceUIBlock
         if (currentResourceCostId != -1)
@@ -69,10 +75,11 @@ public class SkillUIBlock : MonoBehaviour
     /// </summary>
     public void UpdateSkillActiveState(bool isActive)
     {
-        button.interactable = canAfford && isActive;
+        bool canUseSkill = canAfford && isActive;
+        button.interactable = canUseSkill;
 
-        SetAlpha(title, isActive ? 1f : DISABLED_ALPHA);
-        SetAlpha(description, isActive ? 1f : DISABLED_ALPHA);
+        SetAlpha(title, canUseSkill ? 1f : DISABLED_ALPHA);
+        SetAlpha(description, canUseSkill ? 1f : DISABLED_ALPHA);
     }
     private void SetAlpha(TextMeshProUGUI text, float alpha)
     {
@@ -85,17 +92,20 @@ public class SkillUIBlock : MonoBehaviour
     [System.Serializable]
     public class ResourceUI
     {
-        public void Enable(int resourceCost)
+        [SerializeField] private GameObject gameObject;
+        [SerializeField] private GameObject darkOverlayObj;
+        [SerializeField] private TextMeshProUGUI text;
+
+        public void Enable(int resourceCost, bool canAfford)
         {
+            gameObject.SetActiveSmart(true);
+            darkOverlayObj.SetActiveSmart(!canAfford);
+
             text.text = resourceCost.ToString();
-            GameObject.SetActiveSmart(true);
         }
         public void Disable()
         {
-            GameObject.SetActiveSmart(false);
+            gameObject.SetActiveSmart(false);
         }
-
-        [SerializeField] private GameObject GameObject;
-        [SerializeField] private TextMeshProUGUI text;
     }
 }

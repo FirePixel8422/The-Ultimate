@@ -22,7 +22,7 @@ public static class WeaponManager
         int r = EzRandom.Range(0, SkillSets.Length);
         ActiveWeapon_Local = SkillSets[r];
 
-        SkillUIHandler.UpdateSkillUI(ActiveWeapon_Local);
+        SkillUIManager.UpdateSkillUI(ActiveWeapon_Local);
         return r;
     }
 }

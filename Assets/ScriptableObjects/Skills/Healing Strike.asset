@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e328d94dd54b42742853a92270e0522e, type: 3}
-  m_Name: True Strike
+  m_Name: Healing Strike
   m_EditorClassIdentifier: Assembly-CSharp::BaseSkillSO
   Skill:
     rid: 8095730567407730876
@@ -21,25 +21,25 @@ MonoBehaviour:
       type: {class: SkillSimple, ns: , asm: Assembly-CSharp}
       data:
         info:
-          Name: True Strike
-          NameColor: {r: 0.9924528, g: 0.7553597, b: 0.73965824, a: 1}
-          Description: Single slow slash that deals low damage and low true damage
+          Name: Healing Strike
+          Description: Deals no damage. Restores 15 health and cleanses
         costs:
-          Type: 0
-          Amount: 2
+          Type: 1
+          Amount: 3
         defenseWindows:
           Block: 0.5
           Parry: 0.25
           PerfectParry: 0.1
         attackStartupTime: 0
         effects:
-        - rid: 8095730677368750153
-        - rid: 8095730704316104988
-    - rid: 8095730677368750153
-      type: {class: SkillDamageEffect, ns: , asm: Assembly-CSharp}
+        - rid: 9051887009059045537
+        - rid: 9051887009059045538
+    - rid: 9051887009059045537
+      type: {class: SkillRestoreEffect, ns: , asm: Assembly-CSharp}
       data:
-        damage: 10
-    - rid: 8095730704316104988
-      type: {class: SkillTrueDamageEffect, ns: , asm: Assembly-CSharp}
+        ToAddHealth: 15
+        ToAddEnergy: 0
+    - rid: 9051887009059045538
+      type: {class: SkillCleanseEffect, ns: , asm: Assembly-CSharp}
       data:
-        trueDamage: 10
+        Header_Dummy: 0

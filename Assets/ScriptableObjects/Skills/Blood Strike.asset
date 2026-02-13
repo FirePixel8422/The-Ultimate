@@ -25,12 +25,13 @@ MonoBehaviour:
           Description: Single quick slash that deals medium damage and applies 1
             bleeding stack
         costs:
-          Type: 0
-          Amount: 0
-        DefenseWindows:
+          Type: 1
+          Amount: 2
+        defenseWindows:
           Block: 0.5
           Parry: 0.25
           PerfectParry: 0.1
+        attackStartupTime: 0
         effects:
         - rid: 8095730677368750153
         - rid: 8095730677368750154
@@ -43,4 +44,4 @@ MonoBehaviour:
       data:
         ToApplyStatusEffect:
           Type: 1
-          Duration: 2
+          Duration: 0
